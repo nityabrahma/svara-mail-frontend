@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { Archive, File, Inbox, Send, Trash2, FileEdit } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
@@ -27,14 +27,14 @@ const navLinks = [
 export function MailNav() {
     const { state } = useSidebar();
     const isCollapsed = state === 'collapsed';
-    const searchParams = useSearchParams();
-    const currentFolder = searchParams.get('folder') || 'inbox';
+    const params = useParams();
+    const currentFolder = params.folder || 'inbox';
     const [isComposeOpen, setComposeOpen] = React.useState(false);
 
   return (
     <div className="flex h-full flex-col p-2">
       <div className="p-2">
-        <ComposeDialog open={isComposeOpen} onOpenChange={setComposeOpen}>
+        <ComposeDialog open={isComposeOpen} onOpenChange={setComposeOpen} />
             {isCollapsed ? (
                 <Tooltip delayDuration={0}>
                     <TooltipTrigger asChild>
@@ -53,7 +53,6 @@ export function MailNav() {
                     Compose
                 </Button>
             )}
-        </ComposeDialog>
       </div>
 
       <Separator className="my-2" />
@@ -64,7 +63,7 @@ export function MailNav() {
             <Tooltip key={index} delayDuration={0}>
               <TooltipTrigger asChild>
                 <Link
-                  href={`/inbox?folder=${link.folder}`}
+                  href={`/inbox/${link.folder}`}
                   className={cn(
                     'flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8',
                     currentFolder === link.folder && 'bg-muted text-foreground'
@@ -86,7 +85,7 @@ export function MailNav() {
           ) : (
             <Link
               key={index}
-              href={`/inbox?folder=${link.folder}`}
+              href={`/inbox/${link.folder}`}
               className={cn(
                 'flex items-center rounded-lg px-3 py-2 text-muted-foreground transition-colors hover:text-foreground',
                 currentFolder === link.folder && 'bg-muted font-semibold text-foreground'
