@@ -25,11 +25,11 @@ export default function FolderPage() {
   }
 
   return (
-    <div className="h-full w-full overflow-hidden grid md:grid-cols-[440px_1fr]">
+    <div className="h-full w-full overflow-hidden grid grid-cols-1 md:grid-cols-[440px_1fr]">
         <div className="h-full border-r">
             <MailList items={filteredMails} onSelectMail={handleSelectMail} selectedMailId={null} />
         </div>
-        <div className="h-full">
+        <div className="h-full hidden md:block">
             <MailDisplay mail={null} />
         </div>
     </div>

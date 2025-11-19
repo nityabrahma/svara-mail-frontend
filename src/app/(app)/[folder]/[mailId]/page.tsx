@@ -1,37 +1,31 @@
 'use client'
 
 import * as React from 'react'
-
-import { MailList } from '@/components/mail/mail-list'
+import { motion, AnimatePresence } from 'framer-motion'
 import { MailDisplay } from '@/components/mail/mail-display'
-import { mails, type Mail } from '@/lib/data'
-import { useParams, useRouter } from 'next/navigation'
+import { mails } from '@/lib/data'
+import { useParams } from 'next/navigation'
 
 export default function MailPage() {
   const params = useParams()
-  const router = useRouter()
-  const { folder, mailId } = params
-
-  const filteredMails = React.useMemo(() => {
-    return mails.filter((mail) => mail.labels.includes(folder as string))
-  }, [folder])
+  const { mailId } = params
 
   const selectedMail = React.useMemo(() => {
     return mails.find((mail) => mail.id === mailId) ?? null
   }, [mailId])
 
-  const handleSelectMail = (id: string) => {
-    router.push(`/${folder}/${id}`)
-  }
-
   return (
-    <div className="h-full w-full overflow-hidden grid md:grid-cols-[440px_1fr]">
-        <div className="h-full border-r">
-            <MailList items={filteredMails} onSelectMail={handleSelectMail} selectedMailId={mailId as string} />
-        </div>
-        <div className="h-full">
+    <AnimatePresence>
+        <motion.div
+            key={mailId as string}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="h-full"
+        >
             <MailDisplay mail={selectedMail} />
-        </div>
-    </div>
+        </motion.div>
+    </AnimatePresence>
   )
 }

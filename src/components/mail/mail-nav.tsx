@@ -4,6 +4,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { Archive, File, Inbox, Send, Trash2, FileEdit } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -24,6 +25,9 @@ const navLinks = [
   { title: 'Trash', label: '', icon: Trash2, variant: 'ghost', folder: 'trash' },
 ];
 
+const MotionButton = motion(Button);
+const MotionLink = motion(Link);
+
 export function MailNav() {
     const { state } = useSidebar();
     const isCollapsed = state === 'collapsed';
@@ -38,20 +42,32 @@ export function MailNav() {
             {isCollapsed ? (
                 <Tooltip delayDuration={0}>
                     <TooltipTrigger asChild>
-                        <Button variant="default" className="h-9 w-9" onClick={() => setComposeOpen(true)}>
+                        <MotionButton 
+                            variant="default" 
+                            className="h-9 w-9" 
+                            onClick={() => setComposeOpen(true)}
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                        >
                             <FileEdit className="h-4 w-4" />
                             <span className="sr-only">Compose</span>
-                        </Button>
+                        </MotionButton>
                     </TooltipTrigger>
                     <TooltipContent side="right" className="flex items-center gap-4">
                         Compose
                     </TooltipContent>
                 </Tooltip>
             ) : (
-                <Button variant="default" className="w-full justify-start" onClick={() => setComposeOpen(true)}>
+                <MotionButton 
+                    variant="default" 
+                    className="w-full justify-start" 
+                    onClick={() => setComposeOpen(true)}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                >
                     <FileEdit className="mr-2 h-4 w-4" />
                     Compose
-                </Button>
+                </MotionButton>
             )}
       </div>
 
@@ -62,16 +78,18 @@ export function MailNav() {
           isCollapsed ? (
             <Tooltip key={index} delayDuration={0}>
               <TooltipTrigger asChild>
-                <Link
+                <MotionLink
                   href={`/${link.folder}`}
                   className={cn(
                     'flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8',
                     currentFolder === link.folder && 'bg-accent text-foreground'
                   )}
+                  whileHover={{ scale: 1.1, backgroundColor: 'hsl(var(--accent))' }}
+                  whileTap={{ scale: 0.9 }}
                 >
                   <link.icon className="h-5 w-5" />
                   <span className="sr-only">{link.title}</span>
-                </Link>
+                </MotionLink>
               </TooltipTrigger>
               <TooltipContent side="right" className="flex items-center gap-4">
                 {link.title}
@@ -83,20 +101,22 @@ export function MailNav() {
               </TooltipContent>
             </Tooltip>
           ) : (
-            <Link
+            <MotionLink
               key={index}
               href={`/${link.folder}`}
               className={cn(
                 'flex items-center rounded-lg px-3 py-2 text-muted-foreground transition-colors hover:text-foreground',
                 currentFolder === link.folder && 'bg-accent font-semibold text-foreground'
               )}
+              whileHover={{ backgroundColor: 'hsl(var(--accent))', x: 2 }}
+              whileTap={{ scale: 0.98 }}
             >
               <link.icon className="mr-3 h-5 w-5" />
               {link.title}
               {link.label && (
                 <span className={cn('ml-auto', currentFolder === link.folder && 'text-foreground')}>{link.label}</span>
               )}
-            </Link>
+            </MotionLink>
           )
         )}
       </nav>

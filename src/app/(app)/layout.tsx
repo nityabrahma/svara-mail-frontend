@@ -1,29 +1,42 @@
+'use client'
+
 import React from 'react';
-import { cookies } from 'next/headers';
 import { MailNav } from '@/components/mail/mail-nav';
 import { UserNav } from '@/components/mail/user-nav';
-import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarTrigger, SidebarInset } from '@/components/ui/sidebar';
+import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger, SidebarInset } from '@/components/ui/sidebar';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
+import { useParams } from 'next/navigation';
+import { cn } from '@/lib/utils';
+import { AnimatePresence, motion } from 'framer-motion';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-  const layout = cookies().get('react-resizable-panels:layout');
-  const collapsed = cookies().get('react-resizable-panels:collapsed');
+  const params = useParams();
+  const mailId = params.mailId;
 
-  const defaultLayout = layout ? JSON.parse(layout.value) : undefined;
-  const defaultCollapsed = collapsed ? JSON.parse(collapsed.value) : undefined;
-  
   return (
     <SidebarProvider defaultOpen>
-        <Sidebar>
-            <SidebarContent>
-                <MailNav />
-            </SidebarContent>
-        </Sidebar>
-        <SidebarInset>
+        <AnimatePresence>
+          {!mailId && (
+              <motion.div
+                initial={{ width: 0, opacity: 0 }}
+                animate={{ width: 'auto', opacity: 1 }}
+                exit={{ width: 0, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="overflow-hidden"
+              >
+                  <Sidebar>
+                      <SidebarContent>
+                          <MailNav />
+                      </SidebarContent>
+                  </Sidebar>
+              </motion.div>
+          )}
+        </AnimatePresence>
+        <SidebarInset className={cn(mailId && 'md:m-0 md:rounded-none')}>
             <div className="flex h-full flex-col">
                 <header className="flex h-14 items-center gap-4 border-b bg-card px-4 lg:h-[60px] lg:px-6">
-                    <SidebarTrigger className="md:hidden" />
+                    <SidebarTrigger className={cn("md:hidden", mailId && "hidden")} />
                     <div className="w-full flex-1">
                         <form>
                             <div className="relative">
