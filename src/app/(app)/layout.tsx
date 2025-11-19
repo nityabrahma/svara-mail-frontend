@@ -18,7 +18,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
       <SidebarProvider defaultOpen>
         <div className="flex h-screen w-full flex-col">
-            <header className="flex h-16 items-center gap-4 border-b bg-card px-4 md:px-6">
+            <header className="flex h-16 items-center gap-4 border-b bg-card px-4 md:px-6 shrink-0">
                 <div className="flex items-center gap-2">
                     <SidebarTrigger className={("md:hidden")} />
                     <MotionButton 
@@ -53,11 +53,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                         <MailNav onComposeClick={() => setComposeOpen(true)} />
                     </SidebarContent>
                 </Sidebar>
-                <SidebarInset>
-                    <main className="flex-1 overflow-auto">
-                        {children}
-                    </main>
-                </SidebarInset>
+                <main className="flex-1 overflow-auto">
+                    {children}
+                </main>
             </div>
         </div>
         <ComposeDialog open={isComposeOpen} onOpenChange={setComposeOpen} />
