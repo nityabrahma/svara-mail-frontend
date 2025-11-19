@@ -49,19 +49,15 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
           <Card>
-            <CardHeader>
-              <CardTitle>Appearance</CardTitle>
-              <CardDescription>
-                Customize the look and feel of your app.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <h3 className="font-semibold">Theme</h3>
-                <Separator />
-                <ThemeSwitch />
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div>
+                <CardTitle>Appearance</CardTitle>
+                <CardDescription>
+                  Customize the look and feel of your app.
+                </CardDescription>
               </div>
-            </CardContent>
+              <ThemeSwitch />
+            </CardHeader>
           </Card>
         </div>
       </div>
