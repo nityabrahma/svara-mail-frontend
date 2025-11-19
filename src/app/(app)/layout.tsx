@@ -2,17 +2,15 @@
 
 import React from 'react';
 import { MailNav } from '@/components/mail/mail-nav';
-import { SidebarProvider, Sidebar, SidebarContent, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger } from '@/components/ui/sidebar';
 import { ThemeProvider } from '@/components/theme/theme-provider';
 import { ComposeDialog } from '@/components/mail/compose-dialog';
 import { Button, MotionButton } from '@/components/ui/button';
-import { ArrowLeft, Edit, Mail, Search } from 'lucide-react';
+import { Edit, Mail, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { useRouter } from 'next/navigation';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [isComposeOpen, setComposeOpen] = React.useState(false);
-  const router = useRouter();
 
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
@@ -20,7 +18,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <div className="flex h-screen w-full flex-col">
             <header className="flex h-16 items-center gap-4 border-b bg-card px-4 md:px-6 shrink-0">
                 <div className="flex items-center gap-2">
-                    <SidebarTrigger className={("md:hidden")} />
+                    <SidebarTrigger className={"hidden md:flex"} />
                     <Mail className="h-8 w-8 text-primary" />
                     <h1 className="font-headline text-2xl font-bold text-primary">ReactMail</h1>
                 </div>
