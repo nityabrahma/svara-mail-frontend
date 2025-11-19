@@ -8,25 +8,25 @@ body {
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 224 71% 4%;
-    --card: 220 13% 91%;
-    --card-foreground: 224 71% 4%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 224 71% 4%;
-    --primary: 217 91% 60%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 220 13% 91%;
-    --secondary-foreground: 224 71% 4%;
-    --muted: 220 13% 91%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 220 13% 91%;
-    --accent-foreground: 224 71% 4%;
+    --background: 220 100% 97%; /* Lighter, slightly blue background */
+    --foreground: 224 71% 15%; /* Darker blue-black text */
+    --card: 220 20% 100% / 0.6; /* Semi-transparent card */
+    --card-foreground: 224 71% 10%;
+    --popover: 220 20% 100% / 0.8;
+    --popover-foreground: 224 71% 10%;
+    --primary: 240 50% 50%; /* Deep indigo for primary */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 15% 94%;
+    --secondary-foreground: 224 71% 10%;
+    --muted: 220 15% 94%;
+    --muted-foreground: 220 10% 45%;
+    --accent: 142 76% 36%; /* Muted blue-green for accent */
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 215 28% 17%;
-    --input: 215 28% 17%;
-    --ring: 217 91% 60%;
+    --border: 220 20% 90% / 0.8;
+    --input: 220 20% 92% / 0.7;
+    --ring: 240 50% 55%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
@@ -37,23 +37,23 @@ body {
   .dark {
     --background: 224 71% 4%;
     --foreground: 210 40% 98%;
-    --card: 224 71% 8%;
+    --card: 224 71% 8% / 0.6; /* Semi-transparent dark card */
     --card-foreground: 210 40% 98%;
-    --popover: 224 71% 4%;
+    --popover: 224 71% 4% / 0.8;
     --popover-foreground: 210 40% 98%;
-    --primary: 217 91% 60%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 240 50% 60%; /* Lighter indigo for dark mode */
+    --primary-foreground: 0 0% 100%;
     --secondary: 215 28% 17%;
     --secondary-foreground: 210 40% 98%;
     --muted: 215 28% 17%;
     --muted-foreground: 215 20% 65%;
-    --accent: 217 91% 70%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 142 71% 45%; /* Accent for dark mode */
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 215 28% 17%;
-    --input: 215 28% 17%;
-    --ring: 217 91% 60%;
+    --border: 215 28% 25% / 0.8;
+    --input: 215 28% 12% / 0.7;
+    --ring: 240 50% 65%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
