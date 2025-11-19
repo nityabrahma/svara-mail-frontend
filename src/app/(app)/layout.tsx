@@ -8,6 +8,7 @@ import { MotionButton } from '@/components/ui/button';
 import { Edit, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Logo } from '@/components/logo';
+import { UserNav } from '@/components/mail/user-nav';
 
 function AppHeader() {
     return (
@@ -26,6 +27,7 @@ function AppHeader() {
                         className="w-full appearance-none bg-background py-3 pl-10 shadow-none"
                     />
                 </div>
+                <UserNav />
             </div>
         </header>
     )

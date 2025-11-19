@@ -44,8 +44,8 @@ export function MailNav({ onComposeClick }: { onComposeClick: () => void }) {
                     <MotionLink
                     href={`/${link.folder}`}
                     className={cn(
-                        'flex h-12 w-12 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground',
-                        currentFolder === link.folder && 'bg-accent text-accent-foreground'
+                        'flex h-12 w-12 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground',
+                        currentFolder === link.folder && 'bg-secondary text-secondary-foreground'
                     )}
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
@@ -68,8 +68,8 @@ export function MailNav({ onComposeClick }: { onComposeClick: () => void }) {
                 key={index}
                 href={`/${link.folder}`}
                 className={cn(
-                    'flex items-center rounded-lg px-4 py-3 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground',
-                    currentFolder === link.folder && 'bg-accent font-semibold text-accent-foreground'
+                    'flex items-center rounded-lg px-4 py-3 text-muted-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground',
+                    currentFolder === link.folder && 'bg-secondary font-semibold text-secondary-foreground'
                 )}
                 whileHover={{ x: 2 }}
                 whileTap={{ scale: 0.98 }}
@@ -77,7 +77,7 @@ export function MailNav({ onComposeClick }: { onComposeClick: () => void }) {
                 <link.icon className="mr-4 h-6 w-6" />
                 {link.title}
                 {link.label && (
-                    <span className={cn('ml-auto', currentFolder === link.folder && 'text-accent-foreground')}>{link.label}</span>
+                    <span className={cn('ml-auto', currentFolder === link.folder && 'text-secondary-foreground')}>{link.label}</span>
                 )}
                 </MotionLink>
             )
@@ -95,8 +95,8 @@ export function MailNav({ onComposeClick }: { onComposeClick: () => void }) {
                 <MotionLink
                   href="/settings"
                   className={cn(
-                    'flex h-12 w-12 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground',
-                    params.folder === 'settings' && 'bg-accent text-accent-foreground'
+                    'flex h-12 w-12 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground',
+                    params.folder === 'settings' && 'bg-secondary text-secondary-foreground'
                   )}
                    whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
@@ -113,8 +113,8 @@ export function MailNav({ onComposeClick }: { onComposeClick: () => void }) {
             <MotionLink
               href="/settings"
               className={cn(
-                'flex items-center rounded-lg px-4 py-3 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground',
-                params.folder === 'settings' && 'bg-accent font-semibold text-accent-foreground'
+                'flex items-center rounded-lg px-4 py-3 text-muted-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground',
+                params.folder === 'settings' && 'bg-secondary font-semibold text-secondary-foreground'
               )}
               whileHover={{ x: 2 }}
               whileTap={{ scale: 0.98 }}
