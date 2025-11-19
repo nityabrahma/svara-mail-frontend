@@ -10,14 +10,13 @@ import { Input } from '@/components/ui/input';
 import { Logo } from '@/components/logo';
 
 function AppHeader() {
-    const { state } = useSidebar();
-    const isCollapsed = state === 'collapsed';
+    const { isMobile } = useSidebar();
 
     return (
         <header className="flex h-16 items-center gap-4 border-b bg-card px-4 md:px-6 shrink-0">
             <div className="flex items-center gap-2">
-                <Logo isCollapsed={!isCollapsed} />
-                <SidebarTrigger />
+                <SidebarTrigger className="md:hidden" />
+                {!isMobile && <Logo />}
             </div>
 
             <div className="ml-auto flex flex-1 items-center justify-end gap-4">
