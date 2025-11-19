@@ -41,7 +41,7 @@ export function MailNav({ onComposeClick }: { onComposeClick: () => void }) {
                 <MotionLink
                   href={`/${link.folder}`}
                   className={cn(
-                    'flex h-12 w-12 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground',
+                    'flex h-12 w-12 items-center justify-center rounded-full border border-border/70 text-muted-foreground transition-colors hover:text-foreground',
                     currentFolder === link.folder && 'bg-accent text-foreground'
                   )}
                   whileHover={{ scale: 1.1, backgroundColor: 'hsl(var(--accent))' }}
@@ -90,7 +90,7 @@ export function MailNav({ onComposeClick }: { onComposeClick: () => void }) {
                 <MotionLink
                   href="/settings"
                   className={cn(
-                    'flex h-12 w-12 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground',
+                    'flex h-12 w-12 items-center justify-center rounded-full border border-border/70 text-muted-foreground transition-colors hover:text-foreground',
                     params.folder === 'settings' && 'bg-accent text-foreground'
                   )}
                    whileHover={{ scale: 1.1, backgroundColor: 'hsl(var(--accent))' }}
