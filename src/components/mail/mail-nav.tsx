@@ -44,10 +44,10 @@ export function MailNav({ onComposeClick }: { onComposeClick: () => void }) {
                     <MotionLink
                     href={`/${link.folder}`}
                     className={cn(
-                        'flex h-12 w-12 items-center justify-center rounded-full text-muted-foreground transition-colors hover:text-foreground',
-                        currentFolder === link.folder && 'bg-accent text-foreground'
+                        'flex h-12 w-12 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground',
+                        currentFolder === link.folder && 'bg-accent text-accent-foreground'
                     )}
-                    whileHover={{ scale: 1.1, backgroundColor: 'hsl(var(--accent))' }}
+                    whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     >
                     <link.icon className="h-6 w-6" />
@@ -68,16 +68,16 @@ export function MailNav({ onComposeClick }: { onComposeClick: () => void }) {
                 key={index}
                 href={`/${link.folder}`}
                 className={cn(
-                    'flex items-center rounded-lg px-4 py-3 text-muted-foreground transition-colors hover:text-foreground',
-                    currentFolder === link.folder && 'bg-accent font-semibold text-foreground'
+                    'flex items-center rounded-lg px-4 py-3 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground',
+                    currentFolder === link.folder && 'bg-accent font-semibold text-accent-foreground'
                 )}
-                whileHover={{ backgroundColor: 'hsl(var(--accent))', x: 2 }}
+                whileHover={{ x: 2 }}
                 whileTap={{ scale: 0.98 }}
                 >
                 <link.icon className="mr-4 h-6 w-6" />
                 {link.title}
                 {link.label && (
-                    <span className={cn('ml-auto', currentFolder === link.folder && 'text-foreground')}>{link.label}</span>
+                    <span className={cn('ml-auto', currentFolder === link.folder && 'text-accent-foreground')}>{link.label}</span>
                 )}
                 </MotionLink>
             )
@@ -95,10 +95,10 @@ export function MailNav({ onComposeClick }: { onComposeClick: () => void }) {
                 <MotionLink
                   href="/settings"
                   className={cn(
-                    'flex h-12 w-12 items-center justify-center rounded-full text-muted-foreground transition-colors hover:text-foreground',
-                    params.folder === 'settings' && 'bg-accent text-foreground'
+                    'flex h-12 w-12 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground',
+                    params.folder === 'settings' && 'bg-accent text-accent-foreground'
                   )}
-                   whileHover={{ scale: 1.1, backgroundColor: 'hsl(var(--accent))' }}
+                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                 >
                   <Settings className="h-6 w-6" />
@@ -113,10 +113,10 @@ export function MailNav({ onComposeClick }: { onComposeClick: () => void }) {
             <MotionLink
               href="/settings"
               className={cn(
-                'flex items-center rounded-lg px-4 py-3 text-muted-foreground transition-colors hover:text-foreground',
-                params.folder === 'settings' && 'bg-accent font-semibold text-foreground'
+                'flex items-center rounded-lg px-4 py-3 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground',
+                params.folder === 'settings' && 'bg-accent font-semibold text-accent-foreground'
               )}
-              whileHover={{ backgroundColor: 'hsl(var(--accent))', x: 2 }}
+              whileHover={{ x: 2 }}
               whileTap={{ scale: 0.98 }}
             >
               <Settings className="mr-4 h-6 w-6" />

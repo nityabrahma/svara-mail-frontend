@@ -26,8 +26,8 @@ export function MailList({ items, onSelectMail, selectedMailId }: MailListProps)
             key={item.id}
             onClick={() => onSelectMail(item.id)}
             className={cn(
-              'flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent/80',
-              mailId === item.id && 'bg-accent'
+              'flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent/80 hover:text-accent-foreground',
+              mailId === item.id && 'bg-accent text-accent-foreground'
             )}
           >
             <div className="flex w-full flex-col gap-1">
@@ -42,7 +42,7 @@ export function MailList({ items, onSelectMail, selectedMailId }: MailListProps)
                   className={cn(
                     'ml-auto text-xs',
                     mailId === item.id
-                      ? 'text-foreground'
+                      ? 'text-accent-foreground'
                       : 'text-muted-foreground'
                   )}
                 >
