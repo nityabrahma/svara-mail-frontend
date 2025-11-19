@@ -1,5 +1,5 @@
-import { Mail } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 
 type LogoProps = {
   size?: 'sm' | 'md' | 'lg';
@@ -22,7 +22,13 @@ export function Logo({ size = 'md', className, isCollapsed }: LogoProps) {
 
   return (
     <div className={cn('flex items-center gap-2', className)}>
-      <Mail className={cn(sizeClasses[size], 'text-primary')} />
+      <Image 
+        src="/svaraai-logo.png" 
+        alt="SVARA Logo" 
+        width={32} 
+        height={32}
+        className={cn(sizeClasses[size])}
+      />
       {!isCollapsed && (
         <h1
           className={cn(
@@ -30,7 +36,7 @@ export function Logo({ size = 'md', className, isCollapsed }: LogoProps) {
             textSizeClasses[size]
           )}
         >
-          ReactMail
+          SVARA
         </h1>
       )}
     </div>

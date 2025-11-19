@@ -4,7 +4,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/theme/theme-provider';
 
 export const metadata: Metadata = {
-  title: 'ReactMail',
+  title: 'SVARA',
   description: 'A modern mail provider',
 };
 
