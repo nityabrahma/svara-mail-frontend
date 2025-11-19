@@ -3,10 +3,11 @@
 import * as React from 'react'
 import { MailList } from '@/components/mail/mail-list'
 import { mails } from '@/lib/data'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 
 export default function FolderPage() {
   const params = useParams()
+  const router = useRouter()
   const folder = params.folder || 'inbox'
 
   const filteredMails = React.useMemo(() => {
@@ -16,9 +17,13 @@ export default function FolderPage() {
     return mails.filter((mail) => mail.labels.includes(folder as string))
   }, [folder])
 
+  const handleSelectMail = (id: string) => {
+    router.push(`/${folder}/${id}`)
+  }
+
   return (
     <div className="h-full w-full overflow-hidden">
-        <MailList items={filteredMails} />
+        <MailList items={filteredMails} onSelectMail={handleSelectMail} />
     </div>
   )
 }
