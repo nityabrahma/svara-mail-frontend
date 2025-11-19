@@ -66,7 +66,7 @@ export function MailNav() {
                   href={`/${link.folder}`}
                   className={cn(
                     'flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8',
-                    currentFolder === link.folder && 'bg-muted text-foreground'
+                    currentFolder === link.folder && 'bg-accent text-foreground'
                   )}
                 >
                   <link.icon className="h-5 w-5" />
@@ -88,7 +88,7 @@ export function MailNav() {
               href={`/${link.folder}`}
               className={cn(
                 'flex items-center rounded-lg px-3 py-2 text-muted-foreground transition-colors hover:text-foreground',
-                currentFolder === link.folder && 'bg-muted font-semibold text-foreground'
+                currentFolder === link.folder && 'bg-accent font-semibold text-foreground'
               )}
             >
               <link.icon className="mr-3 h-5 w-5" />

@@ -5,7 +5,7 @@ import { formatDistanceToNow } from 'date-fns'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Mail, mails } from '@/lib/data'
+import { Mail } from '@/lib/data'
 
 interface MailListProps {
   items: Mail[]
@@ -21,8 +21,8 @@ export function MailList({ items, onSelectMail, selectedMailId }: MailListProps)
           <button
             key={item.id}
             className={cn(
-              'flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent',
-              selectedMailId === item.id && 'bg-muted'
+              'flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent/80',
+              selectedMailId === item.id && 'bg-accent'
             )}
             onClick={() => onSelectMail(item.id)}
           >
