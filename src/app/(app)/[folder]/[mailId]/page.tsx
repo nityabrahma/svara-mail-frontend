@@ -21,7 +21,7 @@ export default function MailPage() {
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: '100%' }}
         transition={{ duration: 0.3, ease: 'easeInOut' }}
-        className="absolute w-full h-full bg-background"
+        className="w-full h-full bg-background"
     >
         <MailDisplay mail={selectedMail} />
     </motion.div>

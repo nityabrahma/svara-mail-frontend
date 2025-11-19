@@ -6,13 +6,9 @@ import { UserNav } from '@/components/mail/user-nav';
 import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger, SidebarInset } from '@/components/ui/sidebar';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
-import { useParams } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { AnimatePresence, motion } from 'framer-motion';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-  const params = useParams();
-  const mailId = params.mailId;
 
   return (
     <SidebarProvider defaultOpen>
@@ -39,7 +35,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     </div>
                     <UserNav />
                 </header>
-                <main className="flex-1 overflow-hidden relative">
+                <main className="flex-1 overflow-auto">
                     {children}
                 </main>
             </div>
