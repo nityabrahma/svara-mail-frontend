@@ -7,8 +7,12 @@ import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger, SidebarInset 
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { usePathname } from 'next/navigation';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const parts = pathname.split('/').filter(Boolean);
+  const isMailDetailView = parts.length === 2 && parts[0] !== 'login';
 
   return (
     <SidebarProvider defaultOpen>
@@ -17,29 +21,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 <MailNav />
             </SidebarContent>
         </Sidebar>
-        <SidebarInset>
-            <div className="flex h-full flex-col">
-                <header className="flex h-14 items-center gap-4 border-b bg-card px-4 lg:h-[60px] lg:px-6">
-                    <SidebarTrigger className={cn("md:hidden")} />
-                    <div className="w-full flex-1">
-                        <form>
-                            <div className="relative">
-                                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                                <Input
-                                    type="search"
-                                    placeholder="Search mail..."
-                                    className="w-full appearance-none bg-background pl-8 shadow-none md:w-2/3 lg:w-1/3"
-                                />
-                            </div>
-                        </form>
-                    </div>
-                    <UserNav />
-                </header>
-                <main className="flex-1 overflow-auto">
-                    {children}
-                </main>
+        <div className="flex h-full flex-1">
+            <div className={cn("flex-1 transition-all duration-300", isMailDetailView ? 'hidden md:block' : 'block' )}>
+                {children}
             </div>
-        </SidebarInset>
+        </div>
     </SidebarProvider>
   );
 }

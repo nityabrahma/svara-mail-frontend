@@ -18,7 +18,7 @@ import { ComposeDialog } from './compose-dialog';
 import { useSidebar } from '../ui/sidebar';
 
 const navLinks = [
-  { title: 'Inbox', label: '128', icon: Inbox, variant: 'default', folder: 'inbox' },
+  { title: 'Inbox', label: '128', icon: Inbox, variant: 'default', folder: 'all' },
   { title: 'Drafts', label: '9', icon: File, variant: 'ghost', folder: 'drafts' },
   { title: 'Sent', label: '', icon: Send, variant: 'ghost', folder: 'sent' },
   { title: 'Junk', label: '23', icon: Archive, variant: 'ghost', folder: 'junk' },
@@ -32,7 +32,7 @@ export function MailNav() {
     const { state } = useSidebar();
     const isCollapsed = state === 'collapsed';
     const params = useParams();
-    const currentFolder = params.folder || 'inbox';
+    const currentFolder = params.folder || 'all';
     const [isComposeOpen, setComposeOpen] = React.useState(false);
 
   return (
