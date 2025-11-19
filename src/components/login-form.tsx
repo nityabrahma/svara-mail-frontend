@@ -27,15 +27,19 @@ export function LoginForm() {
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Simulate API call
-    console.log(values)
-    toast({
-      title: 'Login Successful',
-      description: 'Redirecting to your inbox...',
-    })
-    // In a real app, you'd handle auth tokens here
-    // and then redirect.
-    router.push('/inbox')
+    if (values.email === 'test@example.com' && values.password === 'password') {
+      toast({
+        title: 'Login Successful',
+        description: 'Redirecting to your inbox...',
+      })
+      router.push('/inbox')
+    } else {
+      toast({
+        variant: 'destructive',
+        title: 'Invalid Credentials',
+        description: 'Please check your email and password.',
+      })
+    }
   }
 
   return (
