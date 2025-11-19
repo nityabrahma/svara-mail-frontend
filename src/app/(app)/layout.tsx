@@ -2,12 +2,9 @@
 
 import React from 'react';
 import { MailNav } from '@/components/mail/mail-nav';
-import { UserNav } from '@/components/mail/user-nav';
-import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger, SidebarInset } from '@/components/ui/sidebar';
-import { Input } from '@/components/ui/input';
-import { Search } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { SidebarProvider, Sidebar, SidebarContent } from '@/components/ui/sidebar';
 import { usePathname } from 'next/navigation';
+import { cn } from '@/lib/utils';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -22,7 +19,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </SidebarContent>
         </Sidebar>
         <div className="flex h-full flex-1">
-            <div className={cn("flex-1 transition-all duration-300", isMailDetailView ? 'hidden md:block' : 'block' )}>
+            <div className={cn("w-full transition-all duration-300", isMailDetailView ? 'hidden md:block' : 'block' )}>
                 {children}
             </div>
         </div>

@@ -1,8 +1,7 @@
 'use client'
 
 import React from 'react';
-import { MailNav } from '@/components/mail/mail-nav';
-import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger, SidebarInset } from '@/components/ui/sidebar';
+import { SidebarTrigger, SidebarInset } from '@/components/ui/sidebar';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -10,12 +9,6 @@ import { cn } from '@/lib/utils';
 export default function FolderLayout({ children }: { children: React.ReactNode }) {
 
   return (
-    <SidebarProvider defaultOpen>
-        <Sidebar>
-            <SidebarContent>
-                <MailNav />
-            </SidebarContent>
-        </Sidebar>
         <SidebarInset>
             <div className="flex h-full flex-col">
                 <header className="flex h-14 items-center gap-4 border-b bg-card px-4 lg:h-[60px] lg:px-6">
@@ -38,6 +31,5 @@ export default function FolderLayout({ children }: { children: React.ReactNode }
                 </main>
             </div>
         </SidebarInset>
-    </SidebarProvider>
   );
 }
