@@ -1,30 +1,34 @@
 'use client'
 
 import { ComponentProps } from 'react'
+import Link from 'next/link'
 import { formatDistanceToNow } from 'date-fns'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Mail } from '@/lib/data'
+import { useParams } from 'next/navigation'
 
 interface MailListProps {
   items: Mail[]
-  onSelectMail: (id: string) => void
   selectedMailId: string | null
 }
 
-export function MailList({ items, onSelectMail, selectedMailId }: MailListProps) {
+export function MailList({ items, selectedMailId }: MailListProps) {
+  const params = useParams()
+  const folder = params.folder
+
   return (
     <ScrollArea className="h-full">
       <div className="flex flex-col gap-2 p-4 pt-0">
         {items.map((item) => (
-          <button
+          <Link
             key={item.id}
+            href={`/${folder}/${item.id}`}
             className={cn(
               'flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent/80',
               selectedMailId === item.id && 'bg-accent'
             )}
-            onClick={() => onSelectMail(item.id)}
           >
             <div className="flex w-full flex-col gap-1">
               <div className="flex items-center">
@@ -63,7 +67,7 @@ export function MailList({ items, onSelectMail, selectedMailId }: MailListProps)
                   ))}
               </div>
             ) : null}
-          </button>
+          </Link>
         ))}
       </div>
     </ScrollArea>

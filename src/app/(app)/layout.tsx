@@ -16,27 +16,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <SidebarProvider defaultOpen>
-        <AnimatePresence>
-          {!mailId && (
-              <motion.div
-                initial={{ width: 0, opacity: 0 }}
-                animate={{ width: 'auto', opacity: 1 }}
-                exit={{ width: 0, opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="overflow-hidden"
-              >
-                  <Sidebar>
-                      <SidebarContent>
-                          <MailNav />
-                      </SidebarContent>
-                  </Sidebar>
-              </motion.div>
-          )}
-        </AnimatePresence>
-        <SidebarInset className={cn(mailId && 'md:m-0 md:rounded-none')}>
+        <Sidebar>
+            <SidebarContent>
+                <MailNav />
+            </SidebarContent>
+        </Sidebar>
+        <SidebarInset>
             <div className="flex h-full flex-col">
                 <header className="flex h-14 items-center gap-4 border-b bg-card px-4 lg:h-[60px] lg:px-6">
-                    <SidebarTrigger className={cn("md:hidden", mailId && "hidden")} />
+                    <SidebarTrigger className={cn("md:hidden")} />
                     <div className="w-full flex-1">
                         <form>
                             <div className="relative">
@@ -51,7 +39,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     </div>
                     <UserNav />
                 </header>
-                <main className="flex-1 overflow-hidden">
+                <main className="flex-1 overflow-hidden relative">
                     {children}
                 </main>
             </div>
