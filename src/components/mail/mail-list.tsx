@@ -3,7 +3,6 @@
 import { ComponentProps } from 'react'
 import { formatDistanceToNow } from 'date-fns'
 import { cn } from '@/lib/utils'
-import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Mail } from '@/lib/data'
 import { useParams } from 'next/navigation'
@@ -20,13 +19,13 @@ export function MailList({ items, onSelectMail, selectedMailId }: MailListProps)
 
   return (
     <ScrollArea className="h-full">
-      <div className="flex flex-col gap-2 p-4 pt-0">
+      <div className="flex flex-col gap-2 p-4">
         {items.map((item) => (
           <button
             key={item.id}
             onClick={() => onSelectMail(item.id)}
             className={cn(
-              'flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-secondary/80 hover:text-secondary-foreground',
+              'flex flex-col items-start gap-2 rounded-lg border p-2 text-left text-sm transition-all hover:bg-secondary/80 hover:text-secondary-foreground',
               mailId === item.id && 'bg-secondary text-secondary-foreground'
             )}
           >
@@ -56,38 +55,9 @@ export function MailList({ items, onSelectMail, selectedMailId }: MailListProps)
             <div className="line-clamp-2 text-xs text-muted-foreground">
               {item.text.substring(0, 300)}
             </div>
-            {item.labels.length > 1 ? (
-              <div className="flex items-center gap-2">
-                {item.labels
-                  .filter((label) => !['inbox', 'sent', 'trash', 'junk'].includes(label))
-                  .map((label) => (
-                    <Badge key={label} variant={getBadgeVariantFromLabel(label)}>
-                      {label}
-                    </Badge>
-                  ))}
-              </div>
-            ) : null}
           </button>
         ))}
       </div>
     </ScrollArea>
   )
-}
-
-function getBadgeVariantFromLabel(
-  label: string
-): ComponentProps<typeof Badge>['variant'] {
-  if (['work'].includes(label.toLowerCase())) {
-    return 'default'
-  }
-
-  if (['personal'].includes(label.toLowerCase())) {
-    return 'outline'
-  }
-  
-  if (['important'].includes(label.toLowerCase())) {
-    return 'destructive'
-  }
-
-  return 'secondary'
 }
