@@ -21,17 +21,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <header className="flex h-16 items-center gap-4 border-b bg-card px-4 md:px-6 shrink-0">
                 <div className="flex items-center gap-2">
                     <SidebarTrigger className={("md:hidden")} />
-                    <MotionButton 
-                        onClick={() => router.back()}
-                        whileHover={{ scale: 1.1 }} 
-                        whileTap={{ scale: 0.9 }} 
-                        variant="ghost" 
-                        size="icon"
-                        className="hidden md:flex"
-                    >
-                        <ArrowLeft className="h-5 w-5" />
-                        <span className="sr-only">Back</span>
-                    </MotionButton>
                     <Mail className="h-8 w-8 text-primary" />
                     <h1 className="font-headline text-2xl font-bold text-primary">ReactMail</h1>
                 </div>
