@@ -63,7 +63,7 @@ export function MailNav() {
             <Tooltip key={index} delayDuration={0}>
               <TooltipTrigger asChild>
                 <Link
-                  href={`/inbox/${link.folder}`}
+                  href={`/${link.folder}`}
                   className={cn(
                     'flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8',
                     currentFolder === link.folder && 'bg-muted text-foreground'
@@ -85,7 +85,7 @@ export function MailNav() {
           ) : (
             <Link
               key={index}
-              href={`/inbox/${link.folder}`}
+              href={`/${link.folder}`}
               className={cn(
                 'flex items-center rounded-lg px-3 py-2 text-muted-foreground transition-colors hover:text-foreground',
                 currentFolder === link.folder && 'bg-muted font-semibold text-foreground'
