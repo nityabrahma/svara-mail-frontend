@@ -18,9 +18,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <div className="flex h-screen w-full flex-col">
             <header className="flex h-16 items-center gap-4 border-b bg-card px-4 md:px-6 shrink-0">
                 <div className="flex items-center gap-2">
-                    <SidebarTrigger className={"hidden md:flex"} />
                     <Mail className="h-8 w-8 text-primary" />
                     <h1 className="font-headline text-2xl font-bold text-primary">ReactMail</h1>
+                    <SidebarTrigger />
                 </div>
 
                 <div className="ml-auto flex flex-1 items-center justify-end gap-4">
