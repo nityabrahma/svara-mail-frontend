@@ -41,7 +41,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
                     whileTap={{ scale: 0.9 }} 
                     variant="ghost" 
                     size="icon"
-                    className="mr-2 md:hidden"
+                    className="mr-2"
                 >
                     <ArrowLeft className="h-4 w-4" />
                     <span className="sr-only">Back</span>
