@@ -65,7 +65,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             onClick={() => setComposeOpen(true)}
             whileHover={{ scale: 1.1, rotate: 5 }}
             whileTap={{ scale: 0.9 }}
-            className="fixed bottom-6 right-6 h-16 w-16 rounded-full shadow-lg"
+            className="fixed bottom-6 right-6 h-16 w-16 rounded-full shadow-lg z-10"
         >
             <Edit className="h-6 w-6" />
             <span className="sr-only">Compose</span>
