@@ -14,19 +14,19 @@ body {
     --card-foreground: 224 71% 10%;
     --popover: 220 20% 100% / 0.8;
     --popover-foreground: 224 71% 10%;
-    --primary: 181 100% 50%; /* Electric Cyan */
-    --primary-foreground: 181 100% 10%; /* Darker color for text on primary */
+    --primary: 185 100% 36%; /* New Teal */
+    --primary-foreground: 185 100% 10%; /* Darker color for text on primary */
     --secondary: 220 15% 94%;
     --secondary-foreground: 224 71% 10%;
     --muted: 220 15% 94%;
     --muted-foreground: 220 10% 45%;
-    --accent: 181 100% 50%; /* Electric Cyan */
-    --accent-foreground: 181 100% 10%;
+    --accent: 185 100% 36%; /* New Teal */
+    --accent-foreground: 185 100% 10%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     --border: 220 20% 90% / 0.8;
     --input: 220 20% 92% / 0.7;
-    --ring: 181 100% 50%;
+    --ring: 185 100% 36%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
@@ -41,19 +41,19 @@ body {
     --card-foreground: 210 40% 98%;
     --popover: 224 71% 4% / 0.8;
     --popover-foreground: 210 40% 98%;
-    --primary: 181 100% 50%; /* Electric Cyan */
-    --primary-foreground: 181 100% 10%;
+    --primary: 185 100% 36%; /* New Teal */
+    --primary-foreground: 185 100% 10%;
     --secondary: 215 28% 17%;
     --secondary-foreground: 210 40% 98%;
     --muted: 215 28% 17%;
     --muted-foreground: 215 20% 65%;
-    --accent: 181 100% 50%; /* Accent for dark mode */
-    --accent-foreground: 181 100% 10%;
+    --accent: 185 100% 36%; /* Accent for dark mode */
+    --accent-foreground: 185 100% 10%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     --border: 215 28% 25% / 0.8;
     --input: 215 28% 12% / 0.7;
-    --ring: 181 100% 50%;
+    --ring: 185 100% 36%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
