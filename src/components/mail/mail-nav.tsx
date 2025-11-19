@@ -28,14 +28,14 @@ const MotionLink = motion(Link);
 
 export function MailNav({ onComposeClick }: { onComposeClick: () => void }) {
     const { state, isMobile } = useSidebar();
-    const isCollapsed = state === 'collapsed';
+    const isCollapsed = !isMobile && state === 'collapsed';
     const params = useParams();
     const currentFolder = params.folder || 'all';
 
   return (
     <div className="flex h-full flex-col justify-between p-2">
       <div className="flex flex-col gap-1">
-        {isMobile && !isCollapsed && <Logo className="p-2 pt-4" />}
+        {isMobile && <Logo className="p-2 pt-4" />}
         <div className="grid gap-1 px-2 pt-4">
             {navLinks.map((link, index) =>
             isCollapsed ? (

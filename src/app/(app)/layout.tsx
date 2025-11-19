@@ -13,8 +13,8 @@ function AppHeader() {
     return (
         <header className="flex h-16 items-center gap-4 border-b bg-card px-4 md:px-6 shrink-0">
             <div className="flex items-center gap-2">
-                <SidebarTrigger className="flex" />
                 <Logo />
+                <SidebarTrigger className="flex" />
             </div>
 
             <div className="ml-auto flex flex-1 items-center justify-end gap-4">
