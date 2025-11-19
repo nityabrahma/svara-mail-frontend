@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/tooltip';
 import { Separator } from '@/components/ui/separator';
 import { useSidebar } from '../ui/sidebar';
+import { Logo } from '../logo';
 
 const navLinks = [
   { title: 'Inbox', label: '128', icon: Inbox, variant: 'default', folder: 'all' },
@@ -33,53 +34,57 @@ export function MailNav({ onComposeClick }: { onComposeClick: () => void }) {
 
   return (
     <div className="flex h-full flex-col justify-between p-2">
-      <div className="grid gap-1 px-2 pt-4">
-        {navLinks.map((link, index) =>
-          isCollapsed ? (
-            <Tooltip key={index} delayDuration={0}>
-              <TooltipTrigger asChild>
+      <div className="flex flex-col gap-1">
+        {!isCollapsed && <Logo className="p-2 pt-4" />}
+        <div className="grid gap-1 px-2 pt-4">
+            {navLinks.map((link, index) =>
+            isCollapsed ? (
+                <Tooltip key={index} delayDuration={0}>
+                <TooltipTrigger asChild>
+                    <MotionLink
+                    href={`/${link.folder}`}
+                    className={cn(
+                        'flex h-12 w-12 items-center justify-center rounded-full text-muted-foreground transition-colors hover:text-foreground',
+                        currentFolder === link.folder && 'bg-accent text-foreground'
+                    )}
+                    whileHover={{ scale: 1.1, backgroundColor: 'hsl(var(--accent))' }}
+                    whileTap={{ scale: 0.9 }}
+                    >
+                    <link.icon className="h-6 w-6" />
+                    <span className="sr-only">{link.title}</span>
+                    </MotionLink>
+                </TooltipTrigger>
+                <TooltipContent side="right" className="flex items-center gap-4">
+                    {link.title}
+                    {link.label && (
+                    <span className="ml-auto text-muted-foreground">
+                        {link.label}
+                    </span>
+                    )}
+                </TooltipContent>
+                </Tooltip>
+            ) : (
                 <MotionLink
-                  href={`/${link.folder}`}
-                  className={cn(
-                    'flex h-12 w-12 items-center justify-center rounded-full text-muted-foreground transition-colors hover:text-foreground',
-                    currentFolder === link.folder && 'bg-accent text-foreground'
-                  )}
-                  whileHover={{ scale: 1.1, backgroundColor: 'hsl(var(--accent))' }}
-                  whileTap={{ scale: 0.9 }}
+                key={index}
+                href={`/${link.folder}`}
+                className={cn(
+                    'flex items-center rounded-lg px-4 py-3 text-muted-foreground transition-colors hover:text-foreground',
+                    currentFolder === link.folder && 'bg-accent font-semibold text-foreground'
+                )}
+                whileHover={{ backgroundColor: 'hsl(var(--accent))', x: 2 }}
+                whileTap={{ scale: 0.98 }}
                 >
-                  <link.icon className="h-6 w-6" />
-                  <span className="sr-only">{link.title}</span>
-                </MotionLink>
-              </TooltipTrigger>
-              <TooltipContent side="right" className="flex items-center gap-4">
+                <link.icon className="mr-4 h-6 w-6" />
                 {link.title}
                 {link.label && (
-                  <span className="ml-auto text-muted-foreground">
-                    {link.label}
-                  </span>
+                    <span className={cn('ml-auto', currentFolder === link.folder && 'text-foreground')}>{link.label}</span>
                 )}
-              </TooltipContent>
-            </Tooltip>
-          ) : (
-            <MotionLink
-              key={index}
-              href={`/${link.folder}`}
-              className={cn(
-                'flex items-center rounded-lg px-4 py-3 text-muted-foreground transition-colors hover:text-foreground',
-                currentFolder === link.folder && 'bg-accent font-semibold text-foreground'
-              )}
-              whileHover={{ backgroundColor: 'hsl(var(--accent))', x: 2 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <link.icon className="mr-4 h-6 w-6" />
-              {link.title}
-              {link.label && (
-                <span className={cn('ml-auto', currentFolder === link.folder && 'text-foreground')}>{link.label}</span>
-              )}
-            </MotionLink>
-          )
-        )}
+                </MotionLink>
+            )
+            )}
+        </div>
       </div>
+
 
       <div>
         <Separator className="my-2" />
