@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { MailNav } from '@/components/mail/mail-nav';
-import { UserNav } from '@/components/mail/user-nav';
 import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger, SidebarInset } from '@/components/ui/sidebar';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
@@ -33,7 +32,6 @@ export default function FolderLayout({ children }: { children: React.ReactNode }
                             </div>
                         </form>
                     </div>
-                    <UserNav />
                 </header>
                 <main className="flex-1 overflow-auto">
                     {children}
