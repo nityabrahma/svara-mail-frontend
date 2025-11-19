@@ -3,7 +3,6 @@
 import React from 'react';
 import { MailNav } from '@/components/mail/mail-nav';
 import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger, useSidebar } from '@/components/ui/sidebar';
-import { ThemeProvider } from '@/components/theme/theme-provider';
 import { ComposeDialog } from '@/components/mail/compose-dialog';
 import { MotionButton } from '@/components/ui/button';
 import { Edit, Search } from 'lucide-react';
@@ -40,7 +39,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [isComposeOpen, setComposeOpen] = React.useState(false);
 
   return (
-    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
       <SidebarProvider defaultOpen>
         <div className="flex h-screen w-full flex-col">
             <AppHeader />
@@ -66,6 +64,5 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <span className="sr-only">Compose</span>
         </MotionButton>
       </SidebarProvider>
-    </ThemeProvider>
   );
 }
