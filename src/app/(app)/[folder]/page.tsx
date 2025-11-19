@@ -1,7 +1,6 @@
 'use client'
 
 import * as React from 'react'
-import { redirect } from 'next/navigation'
 import { MailList } from '@/components/mail/mail-list'
 import { mails } from '@/lib/data'
 import { useParams } from 'next/navigation'
@@ -9,13 +8,6 @@ import { useParams } from 'next/navigation'
 export default function FolderPage() {
   const params = useParams()
   const folder = params.folder || 'inbox'
-
-  React.useEffect(() => {
-    if (folder === 'inbox') {
-        redirect('/all')
-    }
-  }, [folder])
-
 
   const filteredMails = React.useMemo(() => {
     if (folder === 'all') {
@@ -26,7 +18,7 @@ export default function FolderPage() {
 
   return (
     <div className="h-full w-full overflow-hidden">
-        <MailList items={filteredMails} selectedMailId={null} />
+        <MailList items={filteredMails} />
     </div>
   )
 }

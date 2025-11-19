@@ -11,12 +11,12 @@ import { useParams } from 'next/navigation'
 
 interface MailListProps {
   items: Mail[]
-  selectedMailId: string | null
 }
 
-export function MailList({ items, selectedMailId }: MailListProps) {
+export function MailList({ items }: MailListProps) {
   const params = useParams()
   const folder = params.folder
+  const mailId = params.mailId
 
   return (
     <ScrollArea className="h-full">
@@ -27,7 +27,7 @@ export function MailList({ items, selectedMailId }: MailListProps) {
             href={`/${folder}/${item.id}`}
             className={cn(
               'flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent/80',
-              selectedMailId === item.id && 'bg-accent'
+              mailId === item.id && 'bg-accent'
             )}
           >
             <div className="flex w-full flex-col gap-1">
@@ -41,7 +41,7 @@ export function MailList({ items, selectedMailId }: MailListProps) {
                 <div
                   className={cn(
                     'ml-auto text-xs',
-                    selectedMailId === item.id
+                    mailId === item.id
                       ? 'text-foreground'
                       : 'text-muted-foreground'
                   )}

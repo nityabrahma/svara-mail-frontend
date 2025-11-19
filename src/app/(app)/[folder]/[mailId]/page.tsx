@@ -26,7 +26,7 @@ export default function MailPage() {
   return (
     <div className="h-full w-full overflow-hidden relative">
       <AnimatePresence>
-        {!mailId && (
+        {!selectedMail && (
           <motion.div
             key="mail-list"
             initial={{ opacity: 0, x: '-100%' }}
@@ -35,7 +35,7 @@ export default function MailPage() {
             transition={{ duration: 0.3, ease: 'easeInOut' }}
             className="absolute w-full h-full"
           >
-            <MailList items={filteredMails} selectedMailId={mailId as string} />
+            <MailList items={filteredMails} />
           </motion.div>
         )}
       </AnimatePresence>
