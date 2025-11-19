@@ -32,8 +32,8 @@ export function MailNav({ onComposeClick }: { onComposeClick: () => void }) {
     const currentFolder = params.folder || 'all';
 
   return (
-    <div className="flex h-full flex-col p-2">
-      <nav className="grid gap-1 px-2 flex-1 pt-4">
+    <div className="flex h-full flex-col justify-between p-2">
+      <div className="grid gap-1 px-2 pt-4">
         {navLinks.map((link, index) =>
           isCollapsed ? (
             <Tooltip key={index} delayDuration={0}>
@@ -79,11 +79,11 @@ export function MailNav({ onComposeClick }: { onComposeClick: () => void }) {
             </MotionLink>
           )
         )}
-      </nav>
+      </div>
 
+      <div>
         <Separator className="my-2" />
-        
-        <div className="grid gap-1 px-2 mt-auto">
+        <div className="grid gap-1 px-2">
          {isCollapsed ? (
             <Tooltip delayDuration={0}>
               <TooltipTrigger asChild>
@@ -119,6 +119,7 @@ export function MailNav({ onComposeClick }: { onComposeClick: () => void }) {
             </MotionLink>
           )}
         </div>
+      </div>
     </div>
   );
 }
