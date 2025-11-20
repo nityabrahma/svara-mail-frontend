@@ -19,7 +19,7 @@ export function MailList({ items, onSelectMail, selectedMailId }: MailListProps)
 
   return (
     <ScrollArea className="h-full">
-      <div className="flex flex-col gap-2 p-3 pt-8">
+      <div className="flex flex-col gap-2 p-3">
         {items.map((item) => (
           <button
             key={item.id}
