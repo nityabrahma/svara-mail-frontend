@@ -1,17 +1,19 @@
 'use client'
 
-import { ComponentProps } from 'react'
 import { formatDistanceToNow } from 'date-fns'
 import { cn } from '@/lib/utils'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Mail } from '@/lib/data'
 import { useParams } from 'next/navigation'
+import { motion } from 'framer-motion'
 
 interface MailListProps {
   items: Mail[]
   onSelectMail: (id: string) => void
   selectedMailId?: string | null
 }
+
+const MotionButton = motion.button;
 
 export function MailList({ items, onSelectMail, selectedMailId }: MailListProps) {
   const params = useParams()
@@ -21,9 +23,10 @@ export function MailList({ items, onSelectMail, selectedMailId }: MailListProps)
     <ScrollArea className="h-full">
       <div className="flex flex-col">
         {items.map((item) => (
-          <button
+          <MotionButton
             key={item.id}
             onClick={() => onSelectMail(item.id)}
+            whileTap={{ scale: 0.98 }}
             className={cn(
               'flex flex-col items-start gap-2 p-4 text-left text-sm transition-all hover:bg-secondary/80 hover:text-secondary-foreground border-b',
               mailId === item.id && 'bg-secondary text-secondary-foreground'
@@ -55,7 +58,7 @@ export function MailList({ items, onSelectMail, selectedMailId }: MailListProps)
             <div className="line-clamp-1 text-xs text-muted-foreground">
               {item.text.substring(0, 300)}
             </div>
-          </button>
+          </MotionButton>
         ))}
       </div>
     </ScrollArea>
