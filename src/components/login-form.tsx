@@ -69,7 +69,15 @@ export function LoginForm() {
 
   async function onEmailSubmit(values: z.infer<typeof emailSchema>) {
     try {
-        const isAvailable = await auth.checkUsername(values.credential);
+        let isAvailable;
+        const isEmail = values.credential.includes('@');
+        
+        if (isEmail) {
+            isAvailable = await auth.checkDomainEmail(values.credential);
+        } else {
+            isAvailable = await auth.checkUsername(values.credential);
+        }
+
         setCredential(values.credential);
         if (isAvailable) {
             setStep('signup');
@@ -275,6 +283,7 @@ export function LoginForm() {
                     <FormLabel>Email or Username</FormLabel>
                     <FormControl>
                         <Input placeholder="username@svaramail.com" {...field} />
+
                     </FormControl>
                     <FormMessage />
                     </FormItem>

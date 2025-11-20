@@ -17,6 +17,7 @@ interface CheckUsernameResponse {
 interface AuthContextType {
   user: User | null;
   checkUsername: (username: string) => Promise<boolean>;
+  checkDomainEmail: (email: string) => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -52,11 +53,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const checkDomainEmail = async (email: string): Promise<boolean> => {
+    setLoading(true);
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/users/check-email/${email}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.error || "Check domain email failed");
+      }
+      const data: CheckUsernameResponse = await res.json();
+      return data.isAvailable;
+    } catch (err) {
+      console.error("Error checking domain email:", err);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
         user,
         checkUsername,
+        checkDomainEmail,
       }}
     >
       {children}
