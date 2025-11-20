@@ -18,6 +18,20 @@ const passwordSchema = z.object({
   password: z.string().min(1, { message: 'Password is required.' }),
 })
 
+const signupSchema = z.object({
+    phone: z.string().min(10, { message: 'Please enter a valid phone number.' }),
+    password: z.string().min(8, { message: 'Password must be at least 8 characters.' }),
+    confirmPassword: z.string()
+}).refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+});
+
+const otpSchema = z.object({
+    otp: z.string().length(6, { message: 'OTP must be 6 digits.' }),
+})
+
+
 const GoogleIcon = () => (
     <svg className="mr-2 h-4 w-4" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512">
       <path fill="currentColor" d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 126 21.2 170.8 57.2l-66.8 65.2C314.5 98 283.5 80 248 80c-82.8 0-150.5 67.7-150.5 150.5S165.2 406 248 406c58.3 0 108.3-33.5 131.3-79.3h-131.3v-86.2h240.2c2.5 14.5 4.9 29.8 4.9 46.1z"></path>
@@ -28,7 +42,7 @@ const GoogleIcon = () => (
 export function LoginForm() {
   const router = useRouter()
   const { toast } = useToast()
-  const [step, setStep] = React.useState<'email' | 'password'>('email')
+  const [step, setStep] = React.useState<'email' | 'password' | 'signup' | 'otp'>('email')
   const [email, setEmail] = React.useState('')
 
   const emailForm = useForm<z.infer<typeof emailSchema>>({
@@ -40,12 +54,25 @@ export function LoginForm() {
     resolver: zodResolver(passwordSchema),
     defaultValues: { password: '' },
   })
+  
+  const signupForm = useForm<z.infer<typeof signupSchema>>({
+    resolver: zodResolver(signupSchema),
+    defaultValues: { phone: '', password: '', confirmPassword: '' },
+  })
+
+  const otpForm = useForm<z.infer<typeof otpSchema>>({
+    resolver: zodResolver(otpSchema),
+    defaultValues: { otp: '' },
+  })
 
   function onEmailSubmit(values: z.infer<typeof emailSchema>) {
-    // Mock verification
-    if (values.email) {
+    // Mock user existence check
+    if (values.email === 'test@example.com') {
         setEmail(values.email)
         setStep('password')
+    } else if (values.email) {
+        setEmail(values.email)
+        setStep('signup')
     } else {
         toast({
             variant: 'destructive',
@@ -56,6 +83,7 @@ export function LoginForm() {
   }
 
   function onPasswordSubmit(values: z.infer<typeof passwordSchema>) {
+    // Mock password check
     if (email === 'test@example.com' && values.password === 'password') {
       toast({
         title: 'Login Successful',
@@ -70,10 +98,133 @@ export function LoginForm() {
       })
     }
   }
+
+  function onSignupSubmit(values: z.infer<typeof signupSchema>) {
+    // Mock signup logic
+    console.log('Signing up with:', values);
+    setStep('otp');
+    toast({
+        title: 'OTP Sent',
+        description: 'An OTP has been sent to your phone number.',
+    })
+  }
+  
+  function onOtpSubmit(values: z.infer<typeof otpSchema>) {
+    // Mock OTP verification
+    if (values.otp === '123456') {
+        toast({
+            title: 'Signup Successful!',
+            description: 'Redirecting to your inbox...',
+        })
+        router.push('/inbox');
+    } else {
+        toast({
+            variant: 'destructive',
+            title: 'Invalid OTP',
+            description: 'The OTP you entered is incorrect.',
+        })
+    }
+  }
   
   const handleBack = () => {
     setStep('email');
     passwordForm.reset();
+    signupForm.reset();
+    otpForm.reset();
+  }
+
+  if (step === 'otp') {
+    return (
+        <div className="space-y-6">
+             <div className="flex items-center gap-2 mb-4">
+                <button onClick={() => setStep('signup')} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  &larr; Back
+                </button>
+                <p className="font-semibold truncate">{email}</p>
+            </div>
+            <p className="text-center text-muted-foreground">Enter the 6-digit code sent to your phone.</p>
+            <Form {...otpForm}>
+                <form onSubmit={otpForm.handleSubmit(onOtpSubmit)} className="space-y-6">
+                    <FormField
+                        control={otpForm.control}
+                        name="otp"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>OTP</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="123456" {...field} autoFocus />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <Button type="submit" className="w-full rounded-[30px] p-8" size="lg">
+                        Verify
+                    </Button>
+                </form>
+            </Form>
+        </div>
+    )
+  }
+  
+  if (step === 'signup') {
+    return (
+        <div className="space-y-4">
+            <div className="flex items-center gap-2 mb-4">
+                <button onClick={handleBack} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  &larr; Back
+                </button>
+                <p className="font-semibold truncate">{email}</p>
+            </div>
+            <h3 className="text-xl font-semibold text-center">Create your account</h3>
+            <Form {...signupForm}>
+                <form onSubmit={signupForm.handleSubmit(onSignupSubmit)} className="space-y-4">
+                    <FormField
+                        control={signupForm.control}
+                        name="phone"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Phone Number</FormLabel>
+                                <FormControl>
+                                    <Input type="tel" placeholder="Your phone number" {...field} autoFocus />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={signupForm.control}
+                        name="password"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Password</FormLabel>
+                                <FormControl>
+                                    <Input type="password" placeholder="Create a password" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={signupForm.control}
+                        name="confirmPassword"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Confirm Password</FormLabel>
+                                <FormControl>
+                                    <Input type="password" placeholder="Confirm your password" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <Button type="submit" className="w-full rounded-[30px] p-8" size="lg">
+                        Sign Up
+                    </Button>
+                </form>
+            </Form>
+        </div>
+    )
   }
 
   if (step === 'password') {
