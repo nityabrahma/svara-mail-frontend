@@ -24,7 +24,7 @@ function AppHeader() {
                     <Input
                         type="search"
                         placeholder="Search mail..."
-                        className="w-full appearance-none bg-background py-3 pl-10 shadow-none"
+                        className="w-full appearance-none bg-secondary/90 py-3 pl-10 shadow-none"
                     />
                 </div>
                 <UserNav />
