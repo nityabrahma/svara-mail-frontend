@@ -25,7 +25,7 @@ export function MailList({ items, onSelectMail, selectedMailId }: MailListProps)
             key={item.id}
             onClick={() => onSelectMail(item.id)}
             className={cn(
-              'flex flex-col items-start gap-2 border p-3 text-left text-sm transition-all hover:bg-secondary/80 hover:text-secondary-foreground',
+              'flex flex-col items-start gap-2 border p-4 text-left text-sm transition-all hover:bg-secondary/80 hover:text-secondary-foreground',
               'rounded-[30px]',
               mailId === item.id && 'bg-secondary text-secondary-foreground'
             )}
@@ -53,7 +53,7 @@ export function MailList({ items, onSelectMail, selectedMailId }: MailListProps)
               </div>
               <div className="text-xs font-medium">{item.subject}</div>
             </div>
-            <div className="line-clamp-2 text-xs text-muted-foreground">
+            <div className="line-clamp-1 text-xs text-muted-foreground">
               {item.text.substring(0, 300)}
             </div>
           </button>
