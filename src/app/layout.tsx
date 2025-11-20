@@ -2,6 +2,9 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/theme/theme-provider';
+import { AuthProvider } from '@/hooks/use-auth';
+import { LoadingProvider } from '@/hooks/use-loading';
+import { AppRouterProvider } from '@/hooks/use-router';
 
 export const metadata: Metadata = {
   title: 'SVARA',
@@ -23,8 +26,14 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-          {children}
-          <Toaster />
+            <LoadingProvider>
+              <AppRouterProvider>
+                <AuthProvider>
+                  {children}
+                  <Toaster />
+                </AuthProvider>
+              </AppRouterProvider>
+            </LoadingProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -9,9 +9,10 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { useToast } from '@/hooks/use-toast'
+import { useAuth } from '@/hooks/use-auth'
 
 const emailSchema = z.object({
-  email: z.string().min(1, { message: 'Please enter your email or username.' }),
+  credential: z.string().min(1, { message: 'Please enter your email or username.' }),
 })
 
 const passwordSchema = z.object({
@@ -42,12 +43,13 @@ const GoogleIcon = () => (
 export function LoginForm() {
   const router = useRouter()
   const { toast } = useToast()
+  const auth = useAuth();
   const [step, setStep] = React.useState<'email' | 'password' | 'signup' | 'otp'>('email')
-  const [email, setEmail] = React.useState('')
+  const [credential, setCredential] = React.useState('')
 
   const emailForm = useForm<z.infer<typeof emailSchema>>({
     resolver: zodResolver(emailSchema),
-    defaultValues: { email: '' },
+    defaultValues: { credential: '' },
   })
 
   const passwordForm = useForm<z.infer<typeof passwordSchema>>({
@@ -65,26 +67,27 @@ export function LoginForm() {
     defaultValues: { otp: '' },
   })
 
-  function onEmailSubmit(values: z.infer<typeof emailSchema>) {
-    // Mock user existence check
-    if (values.email === 'test@example.com') {
-        setEmail(values.email)
-        setStep('password')
-    } else if (values.email) {
-        setEmail(values.email)
-        setStep('signup')
-    } else {
+  async function onEmailSubmit(values: z.infer<typeof emailSchema>) {
+    try {
+        const isAvailable = await auth.checkUsername(values.credential);
+        setCredential(values.credential);
+        if (isAvailable) {
+            setStep('signup');
+        } else {
+            setStep('password');
+        }
+    } catch (error: any) {
         toast({
             variant: 'destructive',
-            title: 'Invalid Input',
-            description: 'Please enter a valid email or username.',
+            title: 'Error',
+            description: error.message || 'An unexpected error occurred.',
         })
     }
   }
 
   function onPasswordSubmit(values: z.infer<typeof passwordSchema>) {
     // Mock password check
-    if (email === 'test@example.com' && values.password === 'password') {
+    if (values.password === 'password') {
       toast({
         title: 'Login Successful',
         description: 'Redirecting to your inbox...',
@@ -94,7 +97,7 @@ export function LoginForm() {
       toast({
         variant: 'destructive',
         title: 'Invalid Credentials',
-        description: 'Please check your email and password.',
+        description: 'Please check your password.',
       })
     }
   }
@@ -140,7 +143,7 @@ export function LoginForm() {
                 <button onClick={() => setStep('signup')} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                   &larr; Back
                 </button>
-                <p className="font-semibold truncate">{email}</p>
+                <p className="font-semibold truncate">{credential}</p>
             </div>
             <p className="text-center text-muted-foreground">Enter the 6-digit code sent to your phone.</p>
             <Form {...otpForm}>
@@ -174,7 +177,7 @@ export function LoginForm() {
                 <button onClick={handleBack} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                   &larr; Back
                 </button>
-                <p className="font-semibold truncate">{email}</p>
+                <p className="font-semibold truncate">{credential}</p>
             </div>
             <h3 className="text-xl font-semibold text-center">Create your account</h3>
             <Form {...signupForm}>
@@ -234,7 +237,7 @@ export function LoginForm() {
                 <button onClick={handleBack} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                   &larr; Back
                 </button>
-                <p className="font-semibold truncate">{email}</p>
+                <p className="font-semibold truncate">{credential}</p>
             </div>
             <Form {...passwordForm}>
                 <form onSubmit={passwordForm.handleSubmit(onPasswordSubmit)} className="space-y-6">
@@ -266,7 +269,7 @@ export function LoginForm() {
             <form onSubmit={emailForm.handleSubmit(onEmailSubmit)} className="space-y-6">
                 <FormField
                 control={emailForm.control}
-                name="email"
+                name="credential"
                 render={({ field }) => (
                     <FormItem>
                     <FormLabel>Email or Username</FormLabel>
