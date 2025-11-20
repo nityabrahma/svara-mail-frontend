@@ -169,7 +169,7 @@ export function LoginForm() {
                             </FormItem>
                         )}
                     />
-                    <Button type="submit" className="w-full rounded-[30px] p-8" size="lg">
+                    <Button type="submit" className="w-full rounded-[30px] p-8 text-white text-lg font-bold" size="lg">
                         Verify
                     </Button>
                 </form>
@@ -229,7 +229,7 @@ export function LoginForm() {
                             </FormItem>
                         )}
                     />
-                    <Button type="submit" className="w-full rounded-[30px] p-8" size="lg">
+                    <Button type="submit" className="w-full rounded-[30px] p-8 text-white text-lg font-bold" size="lg">
                         Sign Up
                     </Button>
                 </form>
@@ -262,7 +262,7 @@ export function LoginForm() {
                             </FormItem>
                         )}
                     />
-                    <Button type="submit" className="w-full rounded-[30px] p-8" size="lg">
+                    <Button type="submit" className="w-full rounded-[30px] p-8 text-white text-lg font-bold" size="lg">
                         Sign In
                     </Button>
                 </form>
@@ -289,7 +289,7 @@ export function LoginForm() {
                     </FormItem>
                 )}
                 />
-                <Button type="submit" className="w-full rounded-[30px] p-8" size="lg">
+                <Button type="submit" className="w-full rounded-[30px] p-8 text-white text-lg font-bold" size="lg">
                 Continue
                 </Button>
             </form>
