@@ -5,7 +5,7 @@ import { Logo } from '@/components/logo';
 export default function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md bg-card/80 backdrop-blur-sm border-border/60 shadow-2xl">
+      <Card className="w-full max-w-md border-none bg-card/80 backdrop-blur-sm shadow-2xl">
         <CardHeader className="text-center">
           <div className="mx-auto mb-4 flex items-center justify-center">
             <Logo size="lg" />

@@ -33,7 +33,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setLoading(true);
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/users/check-username/${username}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/check-username/${username}`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
@@ -57,7 +57,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setLoading(true);
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/users/check-email/${email}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/check-email/${email}`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
