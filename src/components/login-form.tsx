@@ -304,7 +304,7 @@ export function LoginForm() {
                 </span>
             </div>
         </div>
-        <Button variant="outline" className="w-full rounded-[30px] p-8" size="lg">
+        <Button variant="white" className="w-full rounded-[30px] p-8" size="lg">
            <GoogleIcon />
             Continue with Google
         </Button>
