@@ -71,7 +71,7 @@ export function LoginForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" size="lg">
+        <Button type="submit" className="w-full rounded-[40px] p-8" size="lg">
           Sign In
         </Button>
       </form>
