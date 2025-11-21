@@ -4,7 +4,7 @@ import React, { createContext, useContext, useMemo } from 'react';
 
 interface AppRouterContextType {
   push: (path: string) => void;
-  navigateBack: () => void;
+  back: () => void;
 }
 
 const AppRouterContext = createContext<AppRouterContextType | undefined>(undefined);
@@ -14,7 +14,7 @@ export const AppRouterProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   const value = useMemo(() => ({
     push: (path: string) => router.push(path),
-    navigateBack: () => router.back(),
+    back: () => router.back(),
   }), [router]);
 
   return (
