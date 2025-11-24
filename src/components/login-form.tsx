@@ -93,49 +93,82 @@ export function LoginForm() {
         }
     }
 
-    function onPasswordSubmit(values: z.infer<typeof passwordSchema>) {
-        // Mock password check
-        if (values.password === 'password') {
-            toast({
-                title: 'Login Successful',
-                description: 'Redirecting to your inbox...',
-            })
-            router.push('/inbox')
-        } else {
-            toast({
-                variant: 'destructive',
-                title: 'Invalid Credentials',
-                description: 'Please check your password.',
-            })
+    async function onPasswordSubmit(values: z.infer<typeof passwordSchema>) {
+        try {
+          await auth.login(credential, values.password);
+      
+          toast({
+            title: 'Login Successful',
+            description: 'Redirecting to your inbox...',
+          });
+      
+          router.push('/inbox');
+        } catch (err: any) {
+          toast({
+            variant: 'destructive',
+            title: 'Invalid Credentials',
+            description: err.message,
+          });
         }
-    }
+      }
+      const [signupData, setSignupData] = React.useState<{ phone: string; password: string } | null>(null);
 
-    function onSignupSubmit(values: z.infer<typeof signupSchema>) {
-        // Mock signup logic
-        console.log('Signing up with:', values);
-        setStep('otp');
-        toast({
+      async function onSignupSubmit(values: z.infer<typeof signupSchema>) {
+        try {
+          // store phone + password for final register step
+          setSignupData({
+            phone: values.phone,
+            password: values.password,
+          });
+      
+          toast({
             title: 'OTP Sent',
-            description: 'An OTP has been sent to your phone number.',
-        })
-    }
-
-    function onOtpSubmit(values: z.infer<typeof otpSchema>) {
-        // Mock OTP verification
-        if (values.otp === '123456') {
-            toast({
-                title: 'Signup Successful!',
-                description: 'Redirecting to your inbox...',
-            })
-            router.push('/inbox');
-        } else {
-            toast({
-                variant: 'destructive',
-                title: 'Invalid OTP',
-                description: 'The OTP you entered is incorrect.',
-            })
+            description: ' OTP has been sent.',
+          });
+      
+          setStep('otp');
+        } catch (err: any) {
+          toast({
+            variant: 'destructive',
+            title: 'Error',
+            description: err.message,
+          });
         }
-    }
+      }
+
+      async function onOtpSubmit(values: z.infer<typeof otpSchema>) {
+        // mock OTP verification
+        if (values.otp !== '123456') {
+          toast({
+            variant: 'destructive',
+            title: 'Invalid OTP',
+            description: 'OTP is incorrect.',
+          });
+          return;
+        }
+      
+        try {
+          await auth.register(
+            credential,            // username / email
+            signupData!.password,  // stored password
+            signupData!.phone      // stored phone
+          );
+      
+          toast({
+            title: 'Signup Successful!',
+            description: 'Redirecting to your inbox...',
+          });
+      
+          router.push('/inbox');
+        } catch (err: any) {
+          toast({
+            variant: 'destructive',
+            title: 'Registration Failed',
+            description: err.message,
+          });
+        }
+      }
+      
 
     const handleBack = () => {
         setStep('email');
