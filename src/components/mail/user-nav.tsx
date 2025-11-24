@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import {
   Avatar,
@@ -17,26 +17,27 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useRouter } from "next/navigation"
+import { useAuth } from "@/hooks/use-auth";
 
 export function UserNav() {
   const router = useRouter()
+  const auth = useAuth();
+  const current = auth.user;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full hover:bg-transparent">
           <Avatar className="h-9 w-9">
-            <AvatarImage src="https://picsum.photos/seed/user-nav/40/40" alt="@shadcn" data-ai-hint="person face" />
-            <AvatarFallback>SC</AvatarFallback>
+            <AvatarImage src={current?.avatar_url || "https://picsum.photos/seed/user-nav/40/40"} alt={current?.display_name || current?.username || "user"} data-ai-hint="person face" />
+            <AvatarFallback>{(current?.username || "").slice(0,2).toUpperCase() || "U"}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">shadcn</p>
-            <p className="text-xs leading-none text-muted-foreground">
-              m@example.com
-            </p>
+            <p className="text-sm font-medium leading-none">{current?.display_name || current?.username || 'User'}</p>
+            <p className="text-xs leading-none text-muted-foreground">{current?.email || ''}</p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
@@ -51,7 +52,7 @@ export function UserNav() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => router.push('/login')}>
+        <DropdownMenuItem onClick={() => auth.logout()}>
           Log out
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>

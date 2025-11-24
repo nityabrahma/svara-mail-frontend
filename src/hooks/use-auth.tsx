@@ -31,21 +31,13 @@ interface CheckUsernameResponse {
 interface AuthContextType {
   user: User | null;
   token: string | null;
-  register: (
-    username: string,
-    password: string,
-    phoneNumber: string
-  ) => Promise<void>;
+  register: (username: string, password: string, phoneNumber: string) => Promise<void>;
   login: (credential: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   checkUsername: (username: string) => Promise<boolean>;
   checkPhoneNumber: (phoneNumber: string) => Promise<boolean>;
   checkDomainEmail: (email: string) => Promise<boolean>;
-  handleGoogleAuth: (
-    accessToken: string,
-    refreshToken: string,
-    userId: string
-  ) => Promise<void>;
+  handleGoogleAuth: (accessToken: string, refreshToken: string, userId: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -58,7 +50,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const { loading, setLoading } = useLoading();
   const { push } = useAppRouter();
 
-  // 🔹 Fetch user data (if cookie/session exists)
+  // Fetch current user if session exists
   const fetchUserData = async (): Promise<User | null> => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
@@ -68,45 +60,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
       if (res.ok) {
         const userData = await res.json();
-        console.log("✅ Fetched user data:", userData);
         return userData;
       } else {
-        console.log("❌ Failed to fetch user data:", res.status);
         return null;
       }
     } catch (error) {
-      console.error("❌ Error fetching user data:", error);
+      console.error("Error fetching user data:", error);
       return null;
     }
   };
 
-  // 🔹 Initialize auth (check if logged in via cookies/session)
   useEffect(() => {
     const initAuth = async () => {
-      console.log("🔄 Initializing auth...");
+      setLoading(true);
       const userData = await fetchUserData();
-
       if (userData) {
         setUser(userData);
-        setToken("present"); // token exists if backend verified session
-        console.log("✅ User authenticated:", userData);
-      } else {
-        console.log("❌ No authenticated user");
+        setToken("present");
       }
-
       setLoading(false);
     };
-
     initAuth();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // 🔹 Check username availability
   const checkUsername = async (username: string): Promise<boolean> => {
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/check-username/${username}`,
-        { method: "GET", headers: { "Content-Type": "application/json" } }
-      );
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/check-username/${username}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
       if (!res.ok) throw new Error("Check username failed");
       const data: CheckUsernameResponse = await res.json();
       return data.isAvailable;
@@ -116,13 +99,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  // 🔹 Check phone number availability
   const checkPhoneNumber = async (phoneNumber: string): Promise<boolean> => {
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/check-phone/${phoneNumber}`,
-        { method: "GET", headers: { "Content-Type": "application/json" } }
-      );
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/check-phone/${phoneNumber}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
       if (!res.ok) throw new Error("Check phone number failed");
       const data: CheckUsernameResponse = await res.json();
       return data.isAvailable;
@@ -132,13 +114,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  // 🔹 Check domain email availability
   const checkDomainEmail = async (email: string): Promise<boolean> => {
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/check-email/${email}`,
-        { method: "GET", headers: { "Content-Type": "application/json" } }
-      );
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/check-email/${email}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
       if (!res.ok) throw new Error("Check email failed");
       const data: CheckUsernameResponse = await res.json();
       return data.isAvailable;
@@ -148,56 +129,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  // 🔹 Google OAuth handler
-  const handleGoogleAuth = async (
-    accessToken: string,
-    refreshToken: string,
-    userId: string
-  ) => {
+  const handleGoogleAuth = async (accessToken: string, refreshToken: string, userId: string) => {
     setLoading(true);
     try {
       const userData = await fetchUserData();
-
       if (userData) {
         setUser(userData);
         setToken("present");
-        console.log("✅ Google auth successful, redirecting to dashboard...");
-        push("/inbox");
+        push("/dashboard");
       } else {
         throw new Error("Failed to fetch user data");
       }
     } catch (err) {
-      console.error("❌ Google Auth Error:", err);
-      alert("Google login failed. Please try again.");
+      console.error("Google Auth Error:", err);
       push("/auth");
     } finally {
       setLoading(false);
     }
   };
 
-  // 🔹 Register user (no Firebase)
-  const register = async (
-    username: string,
-    password: string,
-    phoneNumber: string
-  ) => {
+  const register = async (username: string, password: string, phoneNumber: string) => {
     setLoading(true);
     try {
       if (!phoneNumber) throw new Error("Phone number is required");
 
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/register`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            username,
-            password,
-            phone_number: phoneNumber,
-          }),
-          credentials: "include", // Backend sets session cookies
-        }
-      );
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password, phone_number: phoneNumber }),
+        credentials: "include",
+      });
 
       if (!res.ok) {
         const errData = await res.json();
@@ -207,7 +168,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       const data: RegisterResponse = await res.json();
       setUser(data.user);
       setToken(data.token);
-
       push("/inbox");
     } catch (err: any) {
       console.error("Registration error:", err);
@@ -217,19 +177,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  // 🔹 Login user
   const login = async (credential: string, password: string) => {
     setLoading(true);
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ credential, password }),
-          credentials: "include",
-        }
-      );
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ credential, password }),
+        credentials: "include",
+      });
 
       if (!res.ok) {
         const errData = await res.json();
@@ -239,7 +195,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       const data: LoginResponse = await res.json();
       setUser(data.user);
       setToken(data.token);
-
       push("/inbox");
     } catch (err: any) {
       console.error("Login error:", err);
@@ -249,7 +204,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  // 🔹 Logout user
   const logout = async () => {
     try {
       setLoading(true);
@@ -286,7 +240,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
-// 🔹 Hook for easy access
 export const useAuth = () => {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error("useAuth must be used within AuthProvider");
