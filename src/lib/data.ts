@@ -1,5 +1,13 @@
 import type { placeholderImages } from './placeholder-images.json';
 
+export type Attachment = {
+  name: string;
+  type: 'image' | 'video' | 'audio' | 'file';
+  url: string;
+  previewUrl?: string;
+  size: string;
+};
+
 export type Mail = {
   id: string;
   name: string;
@@ -10,6 +18,7 @@ export type Mail = {
   date: string;
   read: boolean;
   labels: string[];
+  attachments?: Attachment[];
 };
 
 export const mails: Mail[] = [
@@ -23,6 +32,10 @@ export const mails: Mail[] = [
     date: '2024-05-20T10:30:00',
     read: true,
     labels: ['inbox', 'work'],
+    attachments: [
+        { name: 'mockup-v1.png', type: 'image', url: 'https://picsum.photos/seed/mockup1/800/600', previewUrl: 'https://picsum.photos/seed/mockup1/200/150', size: '1.2 MB' },
+        { name: 'requirements.pdf', type: 'file', url: '#', size: '450 KB' }
+    ]
   },
   {
     id: 'f6g7h8i9j0',
@@ -67,6 +80,11 @@ export const mails: Mail[] = [
     date: '2024-05-18T18:20:00',
     read: true,
     labels: ['inbox', 'personal'],
+     attachments: [
+        { name: 'beach.jpg', type: 'image', url: 'https://picsum.photos/seed/beach/800/600', previewUrl: 'https://picsum.photos/seed/beach/200/150', size: '2.5 MB' },
+        { name: 'vlog-intro.mp4', type: 'video', url: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', previewUrl: 'https://picsum.photos/seed/video1/200/150', size: '15.7 MB' },
+        { name: 'podcast-clip.mp3', type: 'audio', url: 'https://storage.googleapis.com/stolo-public/wai/929ded55-a67b-43b9-8738-b0b304c44917.mp3', size: '834 KB' }
+    ]
   },
   {
     id: 'z6a7b8c9d0',
