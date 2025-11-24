@@ -120,7 +120,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
                         </div>
                       )}
                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                          <a href={att.url} download onClick={(e) => e.stopPropagation()}>
+                          <a href={att.url} download={att.name} onClick={(e) => e.stopPropagation()}>
                             <MotionButton size="icon" variant="outline" className="h-10 w-10 bg-white/20 backdrop-blur-sm border-none hover:bg-white/30" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9}}>
                                 <Download className="h-5 w-5" />
                             </MotionButton>
