@@ -20,14 +20,20 @@ type ComposeDialogProps = {
 
 export function ComposeDialog({ open, onOpenChange }: ComposeDialogProps) {
     const { toast } = useToast()
+    const [isSending, setIsSending] = React.useState(false);
+
 
     const handleSend = () => {
+        setIsSending(true);
         // Simulate sending email
-        toast({
-            title: "Email Sent!",
-            description: "Your message has been successfully sent.",
-        });
-        onOpenChange(false);
+        setTimeout(() => {
+            setIsSending(false);
+            toast({
+                title: "Email Sent!",
+                description: "Your message has been successfully sent.",
+            });
+            onOpenChange(false);
+        }, 1000)
     }
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -43,20 +49,20 @@ export function ComposeDialog({ open, onOpenChange }: ComposeDialogProps) {
             <Label htmlFor="to" className="text-right">
               To
             </Label>
-            <Input id="to" placeholder="recipient@example.com" className="col-span-3" />
+            <Input id="to" placeholder="recipient@example.com" className="col-span-3 shadow-inner" />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="subject" className="text-right">
               Subject
             </Label>
-            <Input id="subject" placeholder="Subject of your email" className="col-span-3" />
+            <Input id="subject" placeholder="Subject of your email" className="col-span-3 shadow-inner" />
           </div>
            <div className="grid grid-cols-1 items-center gap-4">
-            <Textarea placeholder="Type your message here." id="message" className="min-h-[250px]" />
+            <Textarea placeholder="Type your message here." id="message" className="min-h-[250px] shadow-inner" />
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit" onClick={handleSend}>Send</Button>
+          <Button type="submit" onClick={handleSend} loading={isSending}>Send</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

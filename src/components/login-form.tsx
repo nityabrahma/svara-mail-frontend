@@ -69,6 +69,8 @@ export function LoginForm() {
     const auth = useAuth();
     const [step, setStep] = React.useState<'email' | 'password' | 'signup' | 'otp'>('email')
     const [credential, setCredential] = React.useState('')
+    const [isLoading, setIsLoading] = React.useState(false);
+
 
     const emailForm = useForm<z.infer<typeof emailSchema>>({
         resolver: zodResolver(emailSchema),
@@ -91,6 +93,7 @@ export function LoginForm() {
     })
 
     async function onEmailSubmit(values: z.infer<typeof emailSchema>) {
+        setIsLoading(true);
         try {
             let isAvailable;
             const isEmail = values.credential.includes('@');
@@ -113,10 +116,13 @@ export function LoginForm() {
                 title: 'Error',
                 description: error.message || 'An unexpected error occurred.',
             })
+        } finally {
+            setIsLoading(false);
         }
     }
 
     async function onPasswordSubmit(values: z.infer<typeof passwordSchema>) {
+        setIsLoading(true);
         try {
           await auth.login(credential, values.password);
       
@@ -132,11 +138,14 @@ export function LoginForm() {
             title: 'Invalid Credentials',
             description: err.message,
           });
+        } finally {
+            setIsLoading(false);
         }
       }
       const [signupData, setSignupData] = React.useState<{ phone: string; password: string } | null>(null);
 
       async function onSignupSubmit(values: z.infer<typeof signupSchema>) {
+        setIsLoading(true);
         try {
           // store phone + password for final register step
           setSignupData({
@@ -156,10 +165,13 @@ export function LoginForm() {
             title: 'Error',
             description: err.message,
           });
+        } finally {
+            setIsLoading(false);
         }
       }
 
       async function onOtpSubmit(values: z.infer<typeof otpSchema>) {
+        setIsLoading(true);
         // mock OTP verification
         if (values.otp !== '123456') {
           toast({
@@ -167,6 +179,7 @@ export function LoginForm() {
             title: 'Invalid OTP',
             description: 'OTP is incorrect.',
           });
+          setIsLoading(false);
           return;
         }
       
@@ -189,6 +202,8 @@ export function LoginForm() {
             title: 'Registration Failed',
             description: err.message,
           });
+        } finally {
+            setIsLoading(false);
         }
       }
       
@@ -232,7 +247,8 @@ export function LoginForm() {
                                     <Input
                                         placeholder="123456"
                                         autoFocus
-                                        {...field}   // ✅ FIXED — now the form works
+                                        {...field}
+                                        className="shadow-inner"
                                     />
                                 </FormControl>
                                 <FormMessage />
@@ -244,6 +260,7 @@ export function LoginForm() {
                         type="submit"
                         className="w-full rounded-[30px] p-8 text-white text-lg font-bold"
                         size="lg"
+                        loading={isLoading}
                     >
                         Verify
                     </Button>
@@ -273,7 +290,7 @@ export function LoginForm() {
                                 <FormItem>
                                     <FormLabel>Phone Number</FormLabel>
                                     <FormControl>
-                                        <Input type="tel" placeholder="Your phone number" {...field} autoFocus />
+                                        <Input type="tel" placeholder="Your phone number" {...field} autoFocus className="shadow-inner" />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -286,7 +303,7 @@ export function LoginForm() {
                                 <FormItem>
                                     <FormLabel>Password</FormLabel>
                                     <FormControl>
-                                        <Input type="password" placeholder="Create a password" {...field} />
+                                        <Input type="password" placeholder="Create a password" {...field} className="shadow-inner" />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -299,13 +316,13 @@ export function LoginForm() {
                                 <FormItem>
                                     <FormLabel>Confirm Password</FormLabel>
                                     <FormControl>
-                                        <Input type="password" placeholder="Confirm your password" {...field} />
+                                        <Input type="password" placeholder="Confirm your password" {...field} className="shadow-inner" />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit" className="w-full rounded-[30px] p-8 text-white text-lg font-bold" size="lg">
+                        <Button type="submit" className="w-full rounded-[30px] p-8 text-white text-lg font-bold" size="lg" loading={isLoading}>
                             Sign Up
                         </Button>
                     </form>
@@ -332,13 +349,13 @@ export function LoginForm() {
                                 <FormItem>
                                     <FormLabel>Password</FormLabel>
                                     <FormControl>
-                                        <Input type="password" placeholder="••••••••" {...field} autoFocus />
+                                        <Input type="password" placeholder="••••••••" {...field} autoFocus className="shadow-inner" />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit" className="w-full rounded-[30px] p-8 text-white text-lg font-bold" size="lg">
+                        <Button type="submit" className="w-full rounded-[30px] p-8 text-white text-lg font-bold" size="lg" loading={isLoading}>
                             Sign In
                         </Button>
                     </form>
@@ -358,14 +375,14 @@ export function LoginForm() {
                             <FormItem>
                                 <FormLabel>Email or Username</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="username@svara.tech" {...field} />
+                                    <Input placeholder="username@svara.tech" {...field} className="shadow-inner" />
 
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
-                    <Button type="submit" className="w-full rounded-[30px] p-8 text-white text-lg font-bold" size="lg">
+                    <Button type="submit" className="w-full rounded-[30px] p-8 text-white text-lg font-bold" size="lg" loading={isLoading}>
                         Continue
                     </Button>
                 </form>
@@ -380,7 +397,7 @@ export function LoginForm() {
                     </span>
                 </div>
             </div>
-            <Button variant="white" className="w-full rounded-[30px] p-8" size="lg">
+            <Button variant="white" className="w-full rounded-[30px] p-8" size="lg" loading={isLoading}>
                 <GoogleIcon />
                 Continue with Google
             </Button>
