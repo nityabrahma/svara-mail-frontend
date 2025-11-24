@@ -4,12 +4,13 @@ import * as React from 'react'
 import { motion } from 'framer-motion'
 import { MailList } from '@/components/mail/mail-list'
 import { mails } from '@/lib/data'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import { MailDisplay } from '@/components/mail/mail-display'
+import { useAppRouter } from '@/hooks/use-router'
 
 export default function FolderPage() {
   const params = useParams()
-  const router = useRouter()
+  const router = useAppRouter()
   const folder = params.folder || 'inbox'
   const mailId = params.mailId
 

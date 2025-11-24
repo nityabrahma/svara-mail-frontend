@@ -16,11 +16,11 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useRouter } from "next/navigation"
+import { useAppRouter } from "@/hooks/use-router"
 import { useAuth } from "@/hooks/use-auth";
 
 export function UserNav() {
-  const router = useRouter()
+  const router = useAppRouter()
   const auth = useAuth();
   const current = auth.user;
   return (

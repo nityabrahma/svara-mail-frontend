@@ -14,7 +14,7 @@ import { MailActions } from './mail-actions'
 import { MotionButton } from '../ui/button'
 import { ArrowLeft, Download, Paperclip, File as FileIcon, Music, Video } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
-import { useRouter } from 'next/navigation'
+import { useAppRouter } from '@/hooks/use-router'
 import { AttachmentViewer } from './attachment-viewer'
 import { Card } from '../ui/card'
 
@@ -23,7 +23,7 @@ interface MailDisplayProps {
 }
 
 export function MailDisplay({ mail }: MailDisplayProps) {
-  const router = useRouter()
+  const router = useAppRouter()
   const [selectedAttachment, setSelectedAttachment] = React.useState<Attachment | null>(null)
 
   if (!mail) {

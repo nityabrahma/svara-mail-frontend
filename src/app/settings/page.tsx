@@ -4,13 +4,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { SettingsForm } from "@/components/settings/settings-form"
 import { ThemeSwitch } from "@/components/theme/theme-switch"
 import { Separator } from "@/components/ui/separator"
-import { useRouter } from "next/navigation"
+import { useAppRouter } from "@/hooks/use-router"
 import { MotionButton } from "@/components/ui/button"
 import { ArrowLeft } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip"
 
 export default function SettingsPage() {
-  const router = useRouter()
+  const router = useAppRouter()
 
   return (
     <TooltipProvider>

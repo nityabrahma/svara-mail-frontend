@@ -4,12 +4,12 @@ import * as React from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { useToast } from '@/hooks/use-toast'
 import { useAuth } from '@/hooks/use-auth'
+import { useAppRouter } from '@/hooks/use-router'
 
 const credentialSchema = z.string()
   .min(1, { message: 'Please enter your email or username.' })
@@ -64,7 +64,7 @@ const GoogleIcon = () => (
 
 
 export function LoginForm() {
-    const router = useRouter()
+    const router = useAppRouter()
     const { toast } = useToast()
     const auth = useAuth();
     const [step, setStep] = React.useState<'email' | 'password' | 'signup' | 'otp'>('email')
