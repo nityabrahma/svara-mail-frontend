@@ -11,8 +11,31 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useToast } from '@/hooks/use-toast'
 import { useAuth } from '@/hooks/use-auth'
 
+const credentialSchema = z.string()
+  .min(1, { message: 'Please enter your email or username.' })
+  .superRefine((val, ctx) => {
+    if (val.includes('@')) {
+      // It's an email
+      if (!z.string().email().safeParse(val).success) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Invalid email format.',
+        });
+        return;
+      }
+      if (!val.endsWith('@svara.tech')) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Only @svara.tech emails are allowed.',
+        });
+      }
+    } else {
+      // It's a username, no further validation needed for now
+    }
+  });
+
 const emailSchema = z.object({
-    credential: z.string().min(1, { message: 'Please enter your email or username.' }),
+    credential: credentialSchema,
 })
 
 const passwordSchema = z.object({
@@ -335,7 +358,7 @@ export function LoginForm() {
                             <FormItem>
                                 <FormLabel>Email or Username</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="username@svaramail.com" {...field} />
+                                    <Input placeholder="username@svara.tech" {...field} />
 
                                 </FormControl>
                                 <FormMessage />
