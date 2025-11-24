@@ -29,14 +29,16 @@ export const AppRouterProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   const value = useMemo(() => ({
     push: (path: string) => {
-        setLoading(true);
-        router.push(path);
+        if (pathname !== path) {
+            setLoading(true);
+            router.push(path);
+        }
     },
     back: () => {
         setLoading(true);
         router.back();
     },
-  }), [router, setLoading]);
+  }), [router, setLoading, pathname]);
 
   return (
     <AppRouterContext.Provider value={value}>
