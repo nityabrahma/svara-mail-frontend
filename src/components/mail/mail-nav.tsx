@@ -1,7 +1,6 @@
 'use client'
 
 import * as React from 'react';
-import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { Archive, File, Inbox, Send, Trash2, Settings } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -15,6 +14,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { useSidebar } from '../ui/sidebar';
 import { Logo } from '../logo';
+import { useAppRouter } from '@/hooks/use-router';
 
 const navLinks = [
   { title: 'Inbox', label: '128', icon: Inbox, variant: 'default', folder: 'all' },
@@ -24,13 +24,18 @@ const navLinks = [
   { title: 'Trash', label: '', icon: Trash2, variant: 'ghost', folder: 'trash' },
 ];
 
-const MotionLink = motion(Link);
+const MotionButton = motion.button;
 
 export function MailNav({ onComposeClick }: { onComposeClick: () => void }) {
     const { state, isMobile } = useSidebar();
     const isCollapsed = !isMobile && state === 'collapsed';
     const params = useParams();
+    const router = useAppRouter();
     const currentFolder = params.folder || 'all';
+
+    const handleNavClick = (folder: string) => {
+        router.push(`/${folder}`);
+    }
 
   return (
     <div className="flex h-full flex-col justify-between p-2">
@@ -41,8 +46,8 @@ export function MailNav({ onComposeClick }: { onComposeClick: () => void }) {
             isCollapsed ? (
                 <Tooltip key={index} delayDuration={0}>
                 <TooltipTrigger asChild>
-                    <MotionLink
-                    href={`/${link.folder}`}
+                    <MotionButton
+                    onClick={() => handleNavClick(link.folder)}
                     className={cn(
                         'flex h-12 w-12 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground',
                         currentFolder === link.folder && 'bg-secondary text-secondary-foreground'
@@ -52,7 +57,7 @@ export function MailNav({ onComposeClick }: { onComposeClick: () => void }) {
                     >
                     <link.icon className="h-6 w-6" />
                     <span className="sr-only">{link.title}</span>
-                    </MotionLink>
+                    </MotionButton>
                 </TooltipTrigger>
                 <TooltipContent side="right" className="flex items-center gap-4">
                     {link.title}
@@ -64,22 +69,22 @@ export function MailNav({ onComposeClick }: { onComposeClick: () => void }) {
                 </TooltipContent>
                 </Tooltip>
             ) : (
-                <MotionLink
-                key={index}
-                href={`/${link.folder}`}
-                className={cn(
-                    'flex items-center rounded-lg px-4 py-3 text-muted-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground',
-                    currentFolder === link.folder && 'bg-secondary font-semibold text-secondary-foreground'
-                )}
-                whileHover={{ x: 2 }}
-                whileTap={{ scale: 0.98 }}
+                <MotionButton
+                    key={index}
+                    onClick={() => handleNavClick(link.folder)}
+                    className={cn(
+                        'flex items-center rounded-lg px-4 py-3 text-muted-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground text-left',
+                        currentFolder === link.folder && 'bg-secondary font-semibold text-secondary-foreground'
+                    )}
+                    whileHover={{ x: 2 }}
+                    whileTap={{ scale: 0.98 }}
                 >
-                <link.icon className="mr-4 h-6 w-6" />
-                {link.title}
-                {link.label && (
-                    <span className={cn('ml-auto', currentFolder === link.folder && 'text-secondary-foreground')}>{link.label}</span>
-                )}
-                </MotionLink>
+                    <link.icon className="mr-4 h-6 w-6" />
+                    {link.title}
+                    {link.label && (
+                        <span className={cn('ml-auto', currentFolder === link.folder && 'text-secondary-foreground')}>{link.label}</span>
+                    )}
+                </MotionButton>
             )
             )}
         </div>
@@ -92,8 +97,8 @@ export function MailNav({ onComposeClick }: { onComposeClick: () => void }) {
          {isCollapsed ? (
             <Tooltip delayDuration={0}>
               <TooltipTrigger asChild>
-                <MotionLink
-                  href="/settings"
+                <MotionButton
+                  onClick={() => router.push('/settings')}
                   className={cn(
                     'flex h-12 w-12 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground',
                     params.folder === 'settings' && 'bg-secondary text-secondary-foreground'
@@ -103,17 +108,17 @@ export function MailNav({ onComposeClick }: { onComposeClick: () => void }) {
                 >
                   <Settings className="h-6 w-6" />
                   <span className="sr-only">Settings</span>
-                </MotionLink>
+                </MotionButton>
               </TooltipTrigger>
               <TooltipContent side="right">
                 Settings
               </TooltipContent>
             </Tooltip>
           ) : (
-            <MotionLink
-              href="/settings"
+            <MotionButton
+              onClick={() => router.push('/settings')}
               className={cn(
-                'flex items-center rounded-lg px-4 py-3 text-muted-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground',
+                'flex items-center rounded-lg px-4 py-3 text-muted-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground text-left',
                 params.folder === 'settings' && 'bg-secondary font-semibold text-secondary-foreground'
               )}
               whileHover={{ x: 2 }}
@@ -121,7 +126,7 @@ export function MailNav({ onComposeClick }: { onComposeClick: () => void }) {
             >
               <Settings className="mr-4 h-6 w-6" />
               Settings
-            </MotionLink>
+            </MotionButton>
           )}
         </div>
       </div>
