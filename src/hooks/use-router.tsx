@@ -1,6 +1,7 @@
 "use client";
-import { useRouter } from 'next/navigation';
-import React, { createContext, useContext, useMemo } from 'react';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import React, { createContext, useContext, useMemo, useEffect } from 'react';
+import { useLoading } from './use-loading';
 
 interface AppRouterContextType {
   push: (path: string) => void;
@@ -11,11 +12,31 @@ const AppRouterContext = createContext<AppRouterContextType | undefined>(undefin
 
 export const AppRouterProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const router = useRouter();
+  const { setLoading } = useLoading();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    // On initial load, navigation is finished.
+    setLoading(false);
+  }, []);
+  
+  useEffect(() => {
+    // When the path or search params change, navigation is finished.
+    setLoading(false);
+  }, [pathname, searchParams, setLoading]);
+
 
   const value = useMemo(() => ({
-    push: (path: string) => router.push(path),
-    back: () => router.back(),
-  }), [router]);
+    push: (path: string) => {
+        setLoading(true);
+        router.push(path);
+    },
+    back: () => {
+        setLoading(true);
+        router.back();
+    },
+  }), [router, setLoading]);
 
   return (
     <AppRouterContext.Provider value={value}>

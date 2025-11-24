@@ -9,6 +9,8 @@ import { Edit, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Logo } from '@/components/logo';
 import { UserNav } from '@/components/mail/user-nav';
+import { useLoading } from '@/hooks/use-loading';
+import { AnimatePresence, motion } from 'framer-motion';
 
 function AppHeader() {
     return (
@@ -33,6 +35,26 @@ function AppHeader() {
     )
 }
 
+function GlobalLoader() {
+    const { loading } = useLoading();
+
+    return (
+        <AnimatePresence>
+            {loading && (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute top-0 left-0 w-full h-1 z-50"
+                >
+                    <div className="h-full bg-primary animate-pulse" />
+                </motion.div>
+            )}
+        </AnimatePresence>
+    )
+}
+
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [isComposeOpen, setComposeOpen] = React.useState(false);
@@ -40,6 +62,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
       <SidebarProvider defaultOpen>
         <div className="flex h-screen w-full flex-col">
+            <GlobalLoader />
             <AppHeader />
             <div className="flex flex-1 overflow-hidden">
                 <Sidebar>
