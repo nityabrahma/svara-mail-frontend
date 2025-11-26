@@ -29,17 +29,14 @@ export function MailList({ items, onSelectMail, selectedMailId }: MailListProps)
               selectedMailId === item.id && 'bg-secondary text-secondary-foreground'
             )}
           >
-             
-            <div className="flex w-full flex-col gap-1">
-              <div className="flex items-center">
+            <div className="flex w-full items-center">
                 <div className="flex items-center gap-2">
-                  <div className="font-semibold">
-                    
-                    {item.name.charAt(0).toUpperCase() + item.name.slice(1)}</div>
-                  {!item.read && (
-                    <span className="flex h-2 w-2 rounded-full bg-primary" />
-                  )}
-
+                    <div className="font-semibold text-base">
+                        {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
+                    </div>
+                    {!item.read && (
+                        <span className="flex h-2 w-2 rounded-full bg-primary" />
+                    )}
                 </div>
                 <div
                   className={cn(
@@ -53,11 +50,14 @@ export function MailList({ items, onSelectMail, selectedMailId }: MailListProps)
                     addSuffix: true,
                   })}
                 </div>
-              </div>
-              <div className="text-xs font-medium">{item.subject}</div>
             </div>
-            <div className="line-clamp-1 text-xs text-muted-foreground">
-              <p>{item.body.substring(0, 20)}...</p>
+            
+            <div className="font-bold truncate w-full">
+                {item.subject}
+            </div>
+
+            <div className="text-xs text-muted-foreground truncate w-full">
+              {item.body.substring(0, 100)}
             </div>
           </MotionButton>
         ))}
