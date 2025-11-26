@@ -7,7 +7,6 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Email } from '@/lib/emailApi'
 import { motion } from 'framer-motion'
 import { MailContextMenu } from './mail-context-menu'
-import { useMailActions } from '@/hooks/use-mail-actions'
 
 interface MailListProps {
   items: Email[]
@@ -20,15 +19,11 @@ const MotionButton = motion.button;
 export function MailList({ items, onSelectMail, selectedMailId }: MailListProps) {
   const [contextMenuMail, setContextMenuMail] = React.useState<Email | null>(null);
   const [contextMenuOpen, setContextMenuOpen] = React.useState(false);
-  const virtualTriggerRef = React.useRef<HTMLDivElement>(null);
-  const mailActions = useMailActions();
+  const [contextMenuPosition, setContextMenuPosition] = React.useState({ top: 0, left: 0 });
 
   const handleContextMenu = (event: React.MouseEvent, mail: Email) => {
     event.preventDefault();
-    if (virtualTriggerRef.current) {
-        virtualTriggerRef.current.style.left = `${event.clientX}px`;
-        virtualTriggerRef.current.style.top = `${event.clientY}px`;
-    }
+    setContextMenuPosition({ top: event.clientY, left: event.clientX });
     setContextMenuMail(mail);
     setContextMenuOpen(true);
   };
@@ -42,7 +37,6 @@ export function MailList({ items, onSelectMail, selectedMailId }: MailListProps)
 
   return (
       <ScrollArea className="h-full">
-        <div ref={virtualTriggerRef} style={{ position: 'fixed', zIndex: -1, opacity: 0, width: 0, height: 0 }} />
         <div className="flex flex-col">
           {items.map((item) => (
               <MotionButton
@@ -90,10 +84,10 @@ export function MailList({ items, onSelectMail, selectedMailId }: MailListProps)
         {contextMenuMail && (
           <MailContextMenu
             mail={contextMenuMail}
+            open={contextMenuOpen}
             onOpenChange={handleOpenChange}
-            triggerRef={virtualTriggerRef}
+            position={contextMenuPosition}
           >
-            {/* The trigger is now virtual, so this child is not rendered */}
             <div/>
           </MailContextMenu>
         )}
