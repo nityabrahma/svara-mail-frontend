@@ -2,47 +2,51 @@
 
 import * as React from 'react';
 import {
-  Popover,
-  PopoverContent,
-} from '@/components/ui/popover';
-import {
+  DropdownMenu,
+  DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Email } from '@/lib/emailApi';
 import { useMailActions } from '@/hooks/use-mail-actions';
-import { Archive, ArrowRight, CornerDownLeft, Trash, CheckSquare } from 'lucide-react';
-import { PopoverAnchor } from '@radix-ui/react-popover';
+import { Archive, CornerDownLeft, Trash, CheckSquare } from 'lucide-react';
 
 type MailContextMenuProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  position?: { top: number; left: number };
   mail: Email | null;
+  children: React.ReactNode;
   actions: ReturnType<typeof useMailActions>;
 };
 
-export function MailContextMenu({ open, onOpenChange, position, mail, actions }: MailContextMenuProps) {
-  if (!mail || !position) return null;
+export function MailContextMenu({ open, onOpenChange, mail, actions, children }: MailContextMenuProps) {
+  if (!mail) return <>{children}</>;
 
   return (
-    <Popover open={open} onOpenChange={onOpenChange}>
-      <PopoverAnchor style={position} />
-      <PopoverContent className="w-56 p-1">
+    <DropdownMenu open={open} onOpenChange={onOpenChange}>
+      <DropdownMenuTrigger asChild>
+        {children}
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56" alignOffset={-5}>
         <DropdownMenuItem onClick={() => actions.handleSelect(mail)}>
-          <CheckSquare className="mr-2" /> Select
+          <CheckSquare className="mr-2 h-4 w-4" /> 
+          <span>Select</span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => actions.handleReply(mail)}>
-          <CornerDownLeft className="mr-2" /> Reply
+          <CornerDownLeft className="mr-2 h-4 w-4" /> 
+          <span>Reply</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => actions.handleMoveTo(mail, 'archive')}>
-          <Archive className="mr-2" /> Move to Archive
+          <Archive className="mr-2 h-4 w-4" /> 
+          <span>Move to Archive</span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => actions.handleMoveTo(mail, 'trash')} className="text-destructive focus:text-destructive">
-          <Trash className="mr-2" /> Move to Trash
+          <Trash className="mr-2 h-4 w-4" /> 
+          <span>Move to Trash</span>
         </DropdownMenuItem>
-      </PopoverContent>
-    </Popover>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
