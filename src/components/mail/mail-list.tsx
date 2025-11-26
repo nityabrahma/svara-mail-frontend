@@ -29,18 +29,26 @@ export function MailList({ items, onSelectMail, selectedMailId }: MailListProps)
               selectedMailId === item.id && 'bg-secondary text-secondary-foreground'
             )}
           >
-            <div className="flex w-full items-center">
-                <div className="flex items-center gap-2">
-                    <div className="font-semibold text-base">
-                        {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
+            <div className="flex w-full items-center justify-between">
+                <div className="flex items-center gap-4 w-full">
+                    <div className="flex items-center gap-2 w-1/5">
+                        <div className="font-semibold text-base truncate">
+                            {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
+                        </div>
+                        {!item.read && (
+                            <span className="flex h-2 w-2 rounded-full bg-primary" />
+                        )}
                     </div>
-                    {!item.read && (
-                        <span className="flex h-2 w-2 rounded-full bg-primary" />
-                    )}
+                    <div className="flex-1 truncate w-4/5">
+                        <span className="font-bold">{item.subject}</span>
+                        <span className="text-muted-foreground ml-2">
+                           - {item.body.substring(0, 100)}
+                        </span>
+                    </div>
                 </div>
                 <div
                   className={cn(
-                    'ml-auto text-xs',
+                    'ml-4 text-xs whitespace-nowrap',
                     selectedMailId === item.id
                       ? 'text-secondary-foreground'
                       : 'text-muted-foreground'
@@ -50,14 +58,6 @@ export function MailList({ items, onSelectMail, selectedMailId }: MailListProps)
                     addSuffix: true,
                   })}
                 </div>
-            </div>
-            
-            <div className="font-bold truncate w-full">
-                {item.subject}
-            </div>
-
-            <div className="text-xs text-muted-foreground truncate w-full">
-              {item.body.substring(0, 100)}
             </div>
           </MotionButton>
         ))}
