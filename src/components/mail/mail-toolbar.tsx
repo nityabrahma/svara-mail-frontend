@@ -36,7 +36,7 @@ export function MailToolbar() {
                         className='h-5 w-5'
                     />
                 </TooltipTrigger>
-                <TooltipContent>
+                <TooltipContent side="bottom">
                     {allSelected ? 'Deselect all' : 'Select all'}
                 </TooltipContent>
             </Tooltip>
@@ -52,7 +52,7 @@ export function MailToolbar() {
                   <span className="sr-only">Mark as read</span>
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Mark as read</TooltipContent>
+              <TooltipContent side="bottom">Mark as read</TooltipContent>
             </Tooltip>
 
             <Tooltip>
@@ -62,7 +62,7 @@ export function MailToolbar() {
                   <span className="sr-only">Archive</span>
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Archive</TooltipContent>
+              <TooltipContent side="bottom">Archive</TooltipContent>
             </Tooltip>
             
             <Tooltip>
@@ -72,7 +72,7 @@ export function MailToolbar() {
                   <span className="sr-only">Delete</span>
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Delete</TooltipContent>
+              <TooltipContent side="bottom">Delete</TooltipContent>
             </Tooltip>
 
             <div className="ml-auto">
@@ -83,7 +83,7 @@ export function MailToolbar() {
                     <span className="sr-only">Clear selection</span>
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent>Clear selection</TooltipContent>
+                <TooltipContent side="bottom">Clear selection</TooltipContent>
               </Tooltip>
             </div>
           </div>
