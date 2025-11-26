@@ -33,80 +33,118 @@ export function MailList({ items, onSelectMail, selectedMailId, selectedMails, o
 
   const handleOpenChange = (open: boolean) => {
     setContextMenuOpen(open);
-    if (!open) {
-      setContextMenuMail(null);
-    }
+    if (!open) setContextMenuMail(null);
   };
 
   const isSelectionMode = selectedMails.length > 0;
   const isSelected = (id: string) => selectedMails.some(m => m.id === id);
 
   return (
-      <ScrollArea className="h-full">
-        <div className="flex flex-col">
-          {items.map((item) => (
-              <MotionButton
-                key={item.id}
-                onClick={() => isSelectionMode ? onSelect(item) : onSelectMail(item.id)}
-                onContextMenu={(e) => handleContextMenu(e, item)}
-                whileTap={{ scale: 0.98 }}
-                className={cn(
-                  'flex flex-col items-start gap-2 p-4 text-left text-sm transition-all hover:bg-secondary/80 hover:text-secondary-foreground border-b',
-                  selectedMailId === item.id && 'bg-secondary text-secondary-foreground',
-                  !item.read && !isSelected(item.id) && 'bg-secondary/70'
-                )}
-              >
-                <div className="flex w-full items-center justify-between">
-                    <div className="flex items-center gap-4 w-full">
-                        {isSelectionMode ? (
-                           <Checkbox
-                            checked={isSelected(item.id)}
-                            onCheckedChange={() => onSelect(item)}
-                            onClick={(e) => e.stopPropagation()} 
-                            className="h-5 w-5"
-                          />
-                        ) : (
-                          !item.read && (
-                            <span className="flex h-2 w-2 rounded-full bg-primary" />
-                          )
-                        )}
-                        <div className="font-semibold text-base w-1/5">
-                            {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
-                        </div>
-                        <div className="flex-1 truncate w-4/5">
-                            <span className="font-bold truncate">{item.subject}</span>
-                            <span className="text-muted-foreground ml-2 truncate">
-                               - {item.body.substring(0, 100)}
-                            </span>
-                        </div>
-                    </div>
-                    <div
+    <ScrollArea className="h-full">
+      <div className="flex flex-col">
+        {items.map((item) => {
+
+          const isUnread = !item.read; 
+
+          return (
+            <MotionButton
+              key={item.id}
+              onClick={() => isSelectionMode ? onSelect(item) : onSelectMail(item.id)}
+              onContextMenu={(e) => handleContextMenu(e, item)}
+              whileTap={{ scale: 0.98 }}
+              className={cn(
+                "flex flex-col items-start gap-2 p-4 text-left text-sm transition-all hover:bg-secondary/80 hover:text-secondary-foreground border-b",
+                selectedMailId === item.id && "bg-secondary text-secondary-foreground",
+                isUnread && !isSelected(item.id) && "bg-secondary/70"
+              )}
+            >
+              <div className="flex w-full items-center justify-between">
+
+                {/* LEFT SECTION */}
+                <div className="flex items-center gap-4 w-full">
+
+                  
+                  {isSelectionMode ? (
+                    <Checkbox
+                      checked={isSelected(item.id)}
+                      onCheckedChange={() => onSelect(item)}
+                      onClick={(e) => e.stopPropagation()}
+                      className="h-5 w-5"
+                    />
+                  ) : (
+                    isUnread && <span className="flex h-2 w-2 rounded-full bg-primary" />
+                  )}
+
+                  {/* APPLY muted color when seen */}
+                  <div
+                    className={cn(
+                      !isUnread && "text-muted-foreground",
+                      isUnread && "font-semibold",
+                      "text-base w-1/5 truncate"
+                    )}
+                  >
+                    {isUnread
+                      ? item.name.charAt(0).toUpperCase() + item.name.slice(1)
+                      : item.name.charAt(0).toLowerCase() + item.name.slice(1)
+                    }
+                  </div>
+
+                  {/* SUBJECT + BODY */}
+                  <div
+                    className={cn(
+                      !isUnread && "text-muted-foreground",
+                      "flex-1 truncate w-4/5"
+                    )}
+                  >
+                    <span
                       className={cn(
-                        'ml-4 text-xs whitespace-nowrap',
-                        selectedMailId === item.id
-                          ? 'text-secondary-foreground'
-                          : 'text-muted-foreground'
+                        isUnread && "font-bold",
+                        "truncate"
                       )}
                     >
-                      {formatDistanceToNow(new Date(item.date), {
-                        addSuffix: true,
-                      })}
-                    </div>
+                      {item.subject}
+                    </span>
+
+                    <span
+                      className={cn(
+                        isUnread && "font-semibold text-muted-foreground",
+                        "ml-2 truncate"
+                      )}
+                    >
+                      - {item.body.substring(0, 100)}
+                    </span>
+                  </div>
                 </div>
-              </MotionButton>
-          ))}
-        </div>
-        {contextMenuMail && (
-          <MailContextMenu
-            mail={contextMenuMail}
-            open={contextMenuOpen}
-            onOpenChange={handleOpenChange}
-            position={contextMenuPosition}
-            onSelect={onSelect}
-          >
-            <div/>
-          </MailContextMenu>
-        )}
-      </ScrollArea>
+
+                {/* TIME */}
+                <div
+                  className={cn(
+                    "ml-4 text-xs whitespace-nowrap",
+                    selectedMailId === item.id
+                      ? "text-secondary-foreground"
+                      : "text-muted-foreground"
+                  )}
+                >
+                  {formatDistanceToNow(new Date(item.date), { addSuffix: true })}
+                </div>
+              </div>
+            </MotionButton>
+          );
+        })}
+      </div>
+
+      {/* Context Menu */}
+      {contextMenuMail && (
+        <MailContextMenu
+          mail={contextMenuMail}
+          open={contextMenuOpen}
+          onOpenChange={handleOpenChange}
+          position={contextMenuPosition}
+          onSelect={onSelect}
+        >
+          <div />
+        </MailContextMenu>
+      )}
+    </ScrollArea>
   )
 }

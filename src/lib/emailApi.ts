@@ -15,6 +15,7 @@ export type Email = {
   date: string;
   read: boolean;
   labels: string[];
+  
   attachments?: Attachment[];
 };
 
@@ -66,7 +67,7 @@ function mapEmail(item: any): Email {
     body: item.body,
     text: item.html_body || item.body || "",
     date: item.created_at || new Date().toISOString(),
-    read: false,
+    read: item.is_seen??false,
     labels: labels,
     attachments: (item.attachments || []).map(mapAttachment),
   };
@@ -89,7 +90,7 @@ export async function getInboxEmails(): Promise<Email[]> {
 
     const json = await res.json();
     const items = json.data || [];
-
+    
     return items.map(mapEmail);
   } catch (error) {
     console.error("Error fetching inbox emails:", error);
