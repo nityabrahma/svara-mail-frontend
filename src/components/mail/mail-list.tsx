@@ -26,18 +26,19 @@ export function MailList({ items, onSelectMail, selectedMailId }: MailListProps)
             whileTap={{ scale: 0.98 }}
             className={cn(
               'flex flex-col items-start gap-2 p-4 text-left text-sm transition-all hover:bg-secondary/80 hover:text-secondary-foreground border-b',
-              selectedMailId === item.id && 'bg-secondary text-secondary-foreground'
+              selectedMailId === item.id && 'bg-secondary text-secondary-foreground',
+              !item.read && 'bg-secondary/70'
             )}
           >
             <div className="flex w-full items-center justify-between">
                 <div className="flex items-center gap-4 w-full">
                     <div className="flex items-center gap-2 w-1/5">
-                        <div className="font-semibold text-base truncate">
-                            {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
-                        </div>
                         {!item.read && (
                             <span className="flex h-2 w-2 rounded-full bg-primary" />
                         )}
+                        <div className="font-semibold text-base">
+                            {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
+                        </div>
                     </div>
                     <div className="flex-1 truncate w-4/5">
                         <span className="font-bold">{item.subject}</span>
