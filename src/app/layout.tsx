@@ -5,6 +5,8 @@ import { ThemeProvider } from '@/components/theme/theme-provider';
 import { AuthProvider } from '@/hooks/use-auth';
 import { LoadingProvider } from '@/hooks/use-loading';
 import { AppRouterProvider } from '@/hooks/use-router';
+import { AuthGuard } from '@/hooks/auth-guard';
+
 
 export const metadata: Metadata = {
   title: 'SVARA',
@@ -29,7 +31,9 @@ export default function RootLayout({
             <LoadingProvider>
               <AppRouterProvider>
                 <AuthProvider>
-                  {children}
+                  <AuthGuard>
+                    {children}
+                  </AuthGuard>
                   <Toaster />
                 </AuthProvider>
               </AppRouterProvider>

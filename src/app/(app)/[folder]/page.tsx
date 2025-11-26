@@ -54,6 +54,9 @@ export default function FolderPage() {
   }, [])
 
   const filteredMails = React.useMemo(() => {
+    if (folder === 'inbox') {
+      return mails.filter(mail => mail.labels.includes('inbox') && !mail.labels.includes('trash') && !mail.labels.includes('junk'));
+    }
     if (folder === 'all') {
       return mails.filter(mail => !['trash', 'junk'].includes(mail.labels[0]))
     }

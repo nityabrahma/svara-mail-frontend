@@ -43,6 +43,20 @@ function mapAttachment(a: any): Attachment {
 function mapEmail(item: any): Email {
   const sender = item.from_address || "";
 
+  // Assign labels based on item properties
+  const labels: string[] = [];
+  if (item.is_archived) labels.push("archive");
+  if (item.is_trashed) labels.push("trash");
+  if (item.folder?.toLowerCase() === 'sent') labels.push('sent');
+  if (item.folder?.toLowerCase() === 'drafts') labels.push('drafts');
+  if (item.folder?.toLowerCase() === 'junk') labels.push('junk');
+  
+  // If no specific label is assigned, it's in the inbox
+  if (labels.length === 0) {
+      labels.push('inbox');
+  }
+
+
   return {
     id: String(item.id),
     name: sender.split("@")[0] || "Unknown",
@@ -53,7 +67,7 @@ function mapEmail(item: any): Email {
     text: item.html_body || item.body || "",
     date: item.created_at || new Date().toISOString(),
     read: false,
-    labels: [],
+    labels: labels,
     attachments: (item.attachments || []).map(mapAttachment),
   };
 }

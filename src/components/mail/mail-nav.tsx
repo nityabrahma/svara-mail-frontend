@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { useParams } from 'next/navigation';
-import { Archive, File, Inbox, Send, Trash2, Settings } from 'lucide-react';
+import { Archive, File, Inbox, Send, Trash2, Settings, Mail } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 import { cn } from '@/lib/utils';
@@ -17,7 +17,8 @@ import { Logo } from '../logo';
 import { useAppRouter } from '@/hooks/use-router';
 
 const navLinks = [
-  { title: 'Inbox', label: '128', icon: Inbox, variant: 'default', folder: 'all' },
+  { title: 'All Mails', label: '128', icon: Mail, variant: 'default', folder: 'all' },
+  { title: 'Inbox', label: '', icon: Inbox, variant: 'ghost', folder: 'inbox' },
   { title: 'Drafts', label: '9', icon: File, variant: 'ghost', folder: 'drafts' },
   { title: 'Sent', label: '', icon: Send, variant: 'ghost', folder: 'sent' },
   { title: 'Junk', label: '23', icon: Archive, variant: 'ghost', folder: 'junk' },
@@ -31,7 +32,7 @@ export function MailNav({ onComposeClick }: { onComposeClick: () => void }) {
     const isCollapsed = !isMobile && state === 'collapsed';
     const params = useParams();
     const router = useAppRouter();
-    const currentFolder = params.folder || 'all';
+    const currentFolder = params.folder || 'inbox';
 
     const handleNavClick = (folder: string) => {
         router.push(`/${folder}`);
