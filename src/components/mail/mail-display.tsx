@@ -9,7 +9,7 @@ import {
   AvatarImage,
 } from '@/components/ui/avatar'
 import { Separator } from '@/components/ui/separator'
-import { Mail, Attachment } from '@/lib/data'
+import { Email, Attachment } from '@/lib/emailApi'
 import { MailActions } from './mail-actions'
 import { MotionButton } from '../ui/button'
 import { ArrowLeft, Download, Paperclip, File as FileIcon, Music, Video } from 'lucide-react'
@@ -19,7 +19,7 @@ import { AttachmentViewer } from './attachment-viewer'
 import { Card } from '../ui/card'
 
 interface MailDisplayProps {
-  mail: Mail | null
+  mail: Email | null
 }
 
 export function MailDisplay({ mail }: MailDisplayProps) {
@@ -97,9 +97,10 @@ export function MailDisplay({ mail }: MailDisplayProps) {
               </div>
           </div>
           <Separator className='my-4' />
-          <div className="whitespace-pre-wrap text-sm">
-            {mail.text}
-          </div>
+          <div
+            className="text-sm"
+            dangerouslySetInnerHTML={{ __html: mail.text }}
+          />
           
           {mail.attachments && mail.attachments.length > 0 && (
             <div className="mt-8">

@@ -3,12 +3,11 @@
 import { formatDistanceToNow } from 'date-fns'
 import { cn } from '@/lib/utils'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Mail } from '@/lib/data'
-import { useParams } from 'next/navigation'
+import { Email } from '@/lib/emailApi'
 import { motion } from 'framer-motion'
 
 interface MailListProps {
-  items: Mail[]
+  items: Email[]
   onSelectMail: (id: string) => void
   selectedMailId?: string | null
 }
@@ -16,8 +15,6 @@ interface MailListProps {
 const MotionButton = motion.button;
 
 export function MailList({ items, onSelectMail, selectedMailId }: MailListProps) {
-  const params = useParams()
-  const mailId = selectedMailId === undefined ? params.mailId : selectedMailId
 
   return (
     <ScrollArea className="h-full">
@@ -29,7 +26,7 @@ export function MailList({ items, onSelectMail, selectedMailId }: MailListProps)
             whileTap={{ scale: 0.98 }}
             className={cn(
               'flex flex-col items-start gap-2 p-4 text-left text-sm transition-all hover:bg-secondary/80 hover:text-secondary-foreground border-b',
-              mailId === item.id && 'bg-secondary text-secondary-foreground'
+              selectedMailId === item.id && 'bg-secondary text-secondary-foreground'
             )}
           >
             <div className="flex w-full flex-col gap-1">
@@ -43,7 +40,7 @@ export function MailList({ items, onSelectMail, selectedMailId }: MailListProps)
                 <div
                   className={cn(
                     'ml-auto text-xs',
-                    mailId === item.id
+                    selectedMailId === item.id
                       ? 'text-secondary-foreground'
                       : 'text-muted-foreground'
                   )}

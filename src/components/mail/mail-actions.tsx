@@ -14,10 +14,10 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { Mail } from "@/lib/data"
+import { Email } from "@/lib/emailApi"
 
 interface MailActionsProps {
-  mail: Mail
+  mail: Email
 }
 
 const MotionButton = motion(Button);

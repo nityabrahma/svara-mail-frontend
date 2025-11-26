@@ -3,16 +3,48 @@
 import * as React from 'react'
 import { motion } from 'framer-motion'
 import { MailDisplay } from '@/components/mail/mail-display'
-import { mails } from '@/lib/data'
 import { useParams } from 'next/navigation'
+import { getInboxById, Email } from '@/lib/emailApi'
 
 export default function MailPage() {
   const params = useParams()
   const { mailId } = params
 
-  const selectedMail = React.useMemo(() => {
-    return mails.find((mail) => mail.id === mailId) ?? null
-  }, [mailId])
+  const [selectedMail, setSelectedMail] = React.useState<Email | null>(null);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState<string | null>(null);
+
+
+  React.useEffect(() => {
+    if (mailId) {
+      const fetchMail = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+          const mail = await getInboxById(mailId as string);
+          setSelectedMail(mail);
+        } catch (err) {
+          setError('Failed to fetch email');
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchMail();
+    }
+  }, [mailId]);
+
+
+  if (loading) {
+    return <div className='p-4'>Loading email...</div>;
+  }
+
+  if (error) {
+    return <div className='p-4'>{error}</div>;
+  }
+
+  if (!selectedMail) {
+    return <div className='p-4'>Email not found.</div>;
+  }
   
   return (
     <motion.div
