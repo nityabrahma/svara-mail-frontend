@@ -10,6 +10,7 @@ export type Email = {
   email: string;
   avatar: string;
   subject: string;
+  body: string;
   text: string;
   date: string;
   read: boolean;
@@ -48,6 +49,7 @@ function mapEmail(item: any): Email {
     email: sender,
     avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${sender}`,
     subject: item.subject || "(No subject)",
+    body: item.body,
     text: item.html_body || item.body || "",
     date: item.created_at || new Date().toISOString(),
     read: false,
