@@ -12,7 +12,9 @@ import { UserNav } from '@/components/mail/user-nav';
 import { useLoading } from '@/hooks/use-loading';
 import { AnimatePresence, motion } from 'framer-motion';
 import { MailToolbar } from '@/components/mail/mail-toolbar';
-import { MailActionsProvider } from '@/hooks/use-mail-actions';
+import { MailActionsContext, MailToolbarContext } from '@/hooks/use-mail-actions';
+import { useToast } from '@/hooks/use-toast';
+import { Email } from '@/lib/emailApi';
 
 
 function AppHeader() {
@@ -57,6 +59,84 @@ function GlobalLoader() {
         </AnimatePresence>
     )
 }
+
+
+export function MailActionsProvider({ children }: { children: React.ReactNode }) {
+    const { toast } = useToast();
+    const [selectedMails, setSelectedMails] = React.useState<Email[]>([]);
+    const [allMails, setAllMails] = React.useState<Email[]>([]);
+
+    const handleSelect = (mail: Email) => {
+        setSelectedMails(prevSelected => {
+            if (prevSelected.some(m => m.id === mail.id)) {
+                return prevSelected.filter(m => m.id !== mail.id);
+            } else {
+                return [...prevSelected, mail];
+            }
+        });
+    };
+    
+    const handleSelectAll = (mails: Email[]) => {
+        if (selectedMails.length === mails.length) {
+          setSelectedMails([]);
+        } else {
+          setSelectedMails(mails);
+        }
+      };
+
+    const handleClearSelection = () => {
+        setSelectedMails([]);
+    };
+    
+    const handleReply = (mail: Email) => {
+        console.log('Replying to:', mail.id);
+        toast({ title: "Reply", description: `Replying to "${mail.subject}".` });
+        setSelectedMails([]);
+    };
+
+    const handleMoveTo = (mails: Email[] | Email, folder: 'inbox' | 'archive' | 'trash') => {
+        const mailArray = Array.isArray(mails) ? mails : [mails];
+        console.log(`Moving ${mailArray.map(m => m.id).join(', ')} to ${folder}`);
+        toast({ title: "Moved", description: `${mailArray.length} email(s) moved to ${folder}.` });
+        setSelectedMails([]);
+    };
+
+    const handleDelete = (mails: Email[]) => {
+        console.log('Deleting:', mails.map(m => m.id).join(', '));
+        toast({ title: "Deleted", description: `${mails.length} email(s) permanently deleted.` });
+        setSelectedMails([]);
+    };
+    
+    const handleMarkAsRead = (mails: Email[], read: boolean) => {
+        console.log(`Marking ${mails.map(m => m.id).join(', ')} as ${read ? 'read' : 'unread'}`);
+        toast({ title: "Updated", description: `${mails.length} email(s) marked as ${read ? 'read' : 'unread'}.` });
+        setSelectedMails([]);
+    };
+    
+    const mailActionsValue = React.useMemo(() => ({
+        selectedMails,
+        handleSelect,
+        handleSelectAll,
+        handleClearSelection,
+        handleReply,
+        handleMoveTo,
+        handleDelete,
+        handleMarkAsRead,
+    }), [selectedMails]);
+
+    const mailToolbarValue = React.useMemo(() => ({
+        mails: allMails,
+        setMails: setAllMails,
+    }), [allMails]);
+
+    return (
+        <MailActionsContext.Provider value={mailActionsValue}>
+            <MailToolbarContext.Provider value={mailToolbarValue}>
+                {children}
+            </MailToolbarContext.Provider>
+        </MailActionsContext.Provider>
+    );
+};
 
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
