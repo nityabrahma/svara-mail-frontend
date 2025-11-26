@@ -11,6 +11,9 @@ import { Logo } from '@/components/logo';
 import { UserNav } from '@/components/mail/user-nav';
 import { useLoading } from '@/hooks/use-loading';
 import { AnimatePresence, motion } from 'framer-motion';
+import { MailToolbar } from '@/components/mail/mail-toolbar';
+import { MailActionsProvider } from '@/hooks/use-mail-actions';
+
 
 function AppHeader() {
     return (
@@ -60,6 +63,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [isComposeOpen, setComposeOpen] = React.useState(false);
 
   return (
+    <MailActionsProvider>
       <SidebarProvider defaultOpen>
         <div className="flex h-screen w-full flex-col">
             <GlobalLoader />
@@ -70,7 +74,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                         <MailNav onComposeClick={() => setComposeOpen(true)} />
                     </SidebarContent>
                 </Sidebar>
-                <main className="flex-1 overflow-auto">
+                <main className="flex-1 overflow-auto flex flex-col">
+                    <MailToolbar />
                     {children}
                 </main>
             </div>
@@ -86,5 +91,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <span className="sr-only">Compose</span>
         </MotionButton>
       </SidebarProvider>
+    </MailActionsProvider>
   );
 }

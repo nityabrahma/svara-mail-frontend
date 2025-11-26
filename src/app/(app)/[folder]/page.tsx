@@ -7,7 +7,7 @@ import { useParams } from 'next/navigation'
 import { useAppRouter } from '@/hooks/use-router'
 import { getInboxEmails, Email } from '@/lib/emailApi' 
 import { Skeleton } from '@/components/ui/skeleton'
-import { useMailActions } from '@/hooks/use-mail-actions'
+import { useMailActions, useMailToolbar } from '@/hooks/use-mail-actions'
 
 function MailListSkeleton() {
   return (
@@ -40,6 +40,7 @@ export default function FolderPage() {
   const [error, setError] = React.useState<string | null>(null)
   
   const { selectedMails, handleSelect } = useMailActions();
+  const { setMails: setToolbarMails } = useMailToolbar();
 
   React.useEffect(() => {
     async function fetchEmails() {
@@ -47,6 +48,7 @@ export default function FolderPage() {
       try {
         const inboxEmails = await getInboxEmails()
         setMails(inboxEmails)
+        setToolbarMails(inboxEmails);
       } catch (err) {
         setError('Failed to fetch emails')
       } finally {
@@ -54,7 +56,7 @@ export default function FolderPage() {
       }
     }
     fetchEmails()
-  }, [])
+  }, [setToolbarMails])
 
   const filteredMails = React.useMemo(() => {
     if (folder === 'inbox') {
