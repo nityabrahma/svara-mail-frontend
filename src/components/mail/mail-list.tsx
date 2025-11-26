@@ -20,10 +20,15 @@ const MotionButton = motion.button;
 export function MailList({ items, onSelectMail, selectedMailId }: MailListProps) {
   const [contextMenuMail, setContextMenuMail] = React.useState<Email | null>(null);
   const [contextMenuOpen, setContextMenuOpen] = React.useState(false);
+  const virtualTriggerRef = React.useRef<HTMLDivElement>(null);
   const mailActions = useMailActions();
 
   const handleContextMenu = (event: React.MouseEvent, mail: Email) => {
     event.preventDefault();
+    if (virtualTriggerRef.current) {
+        virtualTriggerRef.current.style.left = `${event.clientX}px`;
+        virtualTriggerRef.current.style.top = `${event.clientY}px`;
+    }
     setContextMenuMail(mail);
     setContextMenuOpen(true);
   };
@@ -37,16 +42,11 @@ export function MailList({ items, onSelectMail, selectedMailId }: MailListProps)
 
   return (
       <ScrollArea className="h-full">
+        <div ref={virtualTriggerRef} style={{ position: 'fixed', zIndex: -1, opacity: 0, width: 0, height: 0 }} />
         <div className="flex flex-col">
           {items.map((item) => (
-            <MailContextMenu
-              key={item.id}
-              open={contextMenuOpen && contextMenuMail?.id === item.id}
-              onOpenChange={handleOpenChange}
-              mail={item}
-              actions={mailActions}
-            >
               <MotionButton
+                key={item.id}
                 onClick={() => onSelectMail(item.id)}
                 onContextMenu={(e) => handleContextMenu(e, item)}
                 whileTap={{ scale: 0.98 }}
@@ -85,9 +85,18 @@ export function MailList({ items, onSelectMail, selectedMailId }: MailListProps)
                     </div>
                 </div>
               </MotionButton>
-            </MailContextMenu>
           ))}
         </div>
+        {contextMenuMail && (
+          <MailContextMenu
+            mail={contextMenuMail}
+            onOpenChange={handleOpenChange}
+            triggerRef={virtualTriggerRef}
+          >
+            {/* The trigger is now virtual, so this child is not rendered */}
+            <div/>
+          </MailContextMenu>
+        )}
       </ScrollArea>
   )
 }
