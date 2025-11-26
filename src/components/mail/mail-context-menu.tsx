@@ -46,7 +46,7 @@ export function MailContextMenu({ mail, onOpenChange, open, position, onSelect }
   return (
     <Popover open={open} onOpenChange={onOpenChange}>
       <PopoverAnchor style={{ position: 'absolute', top: position.top, left: position.left }} />
-      <PopoverContent className="w-56 p-2" onCloseAutoFocus={(e) => e.preventDefault()}>
+      <PopoverContent sideOffset={0} className="w-56 p-2" onCloseAutoFocus={(e) => e.preventDefault()}>
         <div className="flex flex-col gap-1">
             <Button variant="ghost" className="w-full justify-start gap-2" onClick={handleSelect}>
                 <CheckSquare className="h-4 w-4" />
