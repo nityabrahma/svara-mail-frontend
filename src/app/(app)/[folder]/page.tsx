@@ -7,6 +7,7 @@ import { useParams } from 'next/navigation'
 import { useAppRouter } from '@/hooks/use-router'
 import { getInboxEmails, Email } from '@/lib/emailApi' 
 import { Skeleton } from '@/components/ui/skeleton'
+import { useMailActions } from '@/hooks/use-mail-actions'
 
 function MailListSkeleton() {
   return (
@@ -36,7 +37,9 @@ export default function FolderPage() {
 
   const [mails, setMails] = React.useState<Email[]>([]) 
   const [loading, setLoading] = React.useState(true) 
-  const [error, setError] = React.useState<string | null>(null) 
+  const [error, setError] = React.useState<string | null>(null)
+  
+  const { selectedMails, handleSelect } = useMailActions();
 
   React.useEffect(() => {
     async function fetchEmails() {
@@ -84,7 +87,12 @@ export default function FolderPage() {
     <div className="h-full w-full flex">
        <div className="w-full h-full overflow-hidden">
         {filteredMails.length > 0 ? (
-          <MailList items={filteredMails} onSelectMail={handleSelectMail} />
+          <MailList 
+            items={filteredMails} 
+            onSelectMail={handleSelectMail}
+            selectedMails={selectedMails}
+            onSelect={handleSelect}
+          />
         ) : (
           <div className="p-8 text-center text-muted-foreground">
             No mails in the <span className="font-semibold capitalize">{folder}</span> folder.

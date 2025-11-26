@@ -1,13 +1,19 @@
 import { Email } from "@/lib/emailApi";
 import { useToast } from "./use-toast";
+import React from "react";
 
 export function useMailActions() {
     const { toast } = useToast();
+    const [selectedMails, setSelectedMails] = React.useState<Email[]>([]);
 
     const handleSelect = (mail: Email) => {
-        // This would typically update some state, e.g., in a multi-select scenario
-        console.log('Selected:', mail.id);
-        toast({ title: "Selected", description: `Email "${mail.subject}" selected.` });
+        setSelectedMails(prevSelected => {
+            if (prevSelected.some(m => m.id === mail.id)) {
+                return prevSelected.filter(m => m.id !== mail.id);
+            } else {
+                return [...prevSelected, mail];
+            }
+        });
     };
 
     const handleReply = (mail: Email) => {
@@ -29,6 +35,7 @@ export function useMailActions() {
     };
 
     return {
+        selectedMails,
         handleSelect,
         handleReply,
         handleMoveTo,

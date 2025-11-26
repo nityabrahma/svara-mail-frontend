@@ -13,14 +13,15 @@ type MailContextMenuProps = {
   onOpenChange: (open: boolean) => void;
   open: boolean;
   position: { top: number; left: number };
+  onSelect: (mail: Email) => void;
 };
 
-export function MailContextMenu({ mail, onOpenChange, open, position }: MailContextMenuProps) {
+export function MailContextMenu({ mail, onOpenChange, open, position, onSelect }: MailContextMenuProps) {
   const actions = useMailActions();
 
   const handleSelect = (e: React.MouseEvent) => {
     e.stopPropagation();
-    actions.handleSelect(mail);
+    onSelect(mail);
     onOpenChange(false);
   };
   
