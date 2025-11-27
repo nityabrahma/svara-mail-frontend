@@ -1,84 +1,59 @@
-import type { Attachment } from "./data";
-export type {Attachment}
+import { Email, Attachment } from './types';
 
-// -------------------------------
-// Email Type
-// -------------------------------
-export type Email = {
-  id: string;
-  name: string;
-  email: string;
-  avatar: string;
-  subject: string;
-  body: string;
-  text: string;
-  date: string;
-  read: boolean;
-  labels: string[];
-  
-  attachments?: Attachment[];
-};
-
-// -------------------------------
-// Attachment Mapper
-// -------------------------------
-function mapAttachment(a: any): Attachment {
-  let type: "image" | "video" | "audio" | "file" = "file";
-
-  if (a.content_type?.startsWith("image")) type = "image";
-  else if (a.content_type?.startsWith("video")) type = "video";
-  else if (a.content_type?.startsWith("audio")) type = "audio";
-
-  return {
-    name: a.filename || "attachment",
-    type,
-    url: a.file_url,
-    previewUrl: a.file_url,
-    size: `${Math.round((a.file_size || 0) / 1024)} KB`,
-  };
-}
-
-// -------------------------------
-// Email Mapper
-// -------------------------------
-function mapEmail(item: any): Email {
-  const sender = item.from_address || "";
-
-  // Assign labels based on item properties
-  const labels: string[] = [];
-  if (item.is_archived) labels.push("archive");
-  if (item.is_trashed) labels.push("trash");
-  if (item.folder?.toLowerCase() === 'sent') labels.push('sent');
-  if (item.folder?.toLowerCase() === 'drafts') labels.push('drafts');
-  if (item.folder?.toLowerCase() === 'junk') labels.push('junk');
-  
-  // If no specific label is assigned, it's in the inbox
-  if (labels.length === 0) {
-      labels.push('inbox');
-  }
-
-
+const mapAttachment = (item: any): Attachment => {
   return {
     id: String(item.id),
-    name: sender.split("@")[0] || "Unknown",
-    email: sender,
-    avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${sender}`,
-    subject: item.subject || "(No subject)",
-    body: item.body,
-    text: item.html_body || item.body || "",
-    date: item.created_at || new Date().toISOString(),
-    read: item.is_seen??false,
-    labels: labels,
-    attachments: (item.attachments || []).map(mapAttachment),
+    filename: item.filename,
+    content_type: item.content_type,
+    size: item.size,
+    url: item.url,
   };
 }
 
-// -------------------------------
-// GET ALL INBOX EMAILS
-// -------------------------------
-export async function getInboxEmails(): Promise<Email[]> {
+export interface PaginatedEmailResponse {
+  data: Email[];
+  pagination: {
+    currentPage: number;
+    pageSize: number;
+    totalItems: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+  };
+}
+
+const mapEmail = (item: any): Email => {
+ const sender = item.from_address || item.email || "";
+
+ const labels: string[] = Array.isArray(item.labels) ? [...item.labels] : [];
+ if (item.is_archived && !labels.includes("archive")) labels.push("archive");
+ if (item.is_trashed && !labels.includes("trash")) labels.push("trash");
+ if (item.folder?.toLowerCase() === 'sent' && !labels.includes('sent')) labels.push('sent');
+ if (item.folder?.toLowerCase() === 'drafts' && !labels.includes('drafts')) labels.push('drafts');
+ if (item.folder?.toLowerCase() === 'junk' && !labels.includes('junk')) labels.push('junk');
+ 
+ if (labels.length === 0 && !item.folder) {
+     labels.push('inbox');
+ }
+
+ return {
+   id: String(item.id),
+   name: sender.split("@")[0] || "Unknown",
+   email: sender,
+   avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${sender}`,
+   subject: item.subject || "(No subject)",
+   body: item.body,
+   text: item.html_body || item.body || "",
+   date: item.created_at || new Date().toISOString(),
+   read: item.is_seen??false,
+   labels: labels,
+   attachments: (item.attachments || []).map(mapAttachment),
+ };
+}
+
+export async function getInboxEmails(page = 1, limit = 20): Promise<PaginatedEmailResponse> {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/emails/inbox`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/emails/inbox?page=${page}&limit=${limit}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -89,18 +64,17 @@ export async function getInboxEmails(): Promise<Email[]> {
     }
 
     const json = await res.json();
-    const items = json.data || [];
-    
-    return items.map(mapEmail);
+    return {
+      data: (json.data || []).map(mapEmail),
+      pagination: json.pagination,
+    };
+
   } catch (error) {
     console.error("Error fetching inbox emails:", error);
     throw error;
   }
 }
 
-// -------------------------------
-// GET SINGLE EMAIL BY ID
-// -------------------------------
 export async function getInboxById(id: string): Promise<Email | null> {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/emails/${id}`, {
