@@ -6,6 +6,7 @@ import { AuthProvider } from '@/hooks/use-auth';
 import { LoadingProvider } from '@/hooks/use-loading';
 import { AppRouterProvider } from '@/hooks/use-router';
 import { AuthGuard } from '@/hooks/auth-guard';
+import { SocketProvider } from '@/hooks/use-socket';
 
 
 export const metadata: Metadata = {
@@ -31,10 +32,12 @@ export default function RootLayout({
             <LoadingProvider>
               <AppRouterProvider>
                 <AuthProvider>
-                  <AuthGuard>
-                    {children}
-                  </AuthGuard>
-                  <Toaster />
+                  <SocketProvider>
+                    <AuthGuard>
+                      {children}
+                    </AuthGuard>
+                    <Toaster />
+                  </SocketProvider>
                 </AuthProvider>
               </AppRouterProvider>
             </LoadingProvider>

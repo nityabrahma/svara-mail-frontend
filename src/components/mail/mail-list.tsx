@@ -44,7 +44,7 @@ export function MailList({ items, onSelectMail, selectedMailId, selectedMails, o
       <div className="flex flex-col">
         {items.map((item) => {
 
-          const isUnread = !item.read; 
+          const isUnread = !item.read;
 
           return (
             <MotionButton
@@ -63,7 +63,7 @@ export function MailList({ items, onSelectMail, selectedMailId, selectedMails, o
                 {/* LEFT SECTION */}
                 <div className="flex items-center gap-4 w-full">
 
-                  
+
                   {isSelectionMode ? (
                     <Checkbox
                       checked={isSelected(item.id)}
@@ -83,10 +83,7 @@ export function MailList({ items, onSelectMail, selectedMailId, selectedMails, o
                       "text-base w-1/5 truncate"
                     )}
                   >
-                    {isUnread
-                      ? item.name.charAt(0).toUpperCase() + item.name.slice(1)
-                      : item.name.charAt(0).toLowerCase() + item.name.slice(1)
-                    }
+                    {(isUnread ? item.name.charAt(0).toUpperCase() : item.name.charAt(0).toLowerCase()) + item.name.slice(1)}
                   </div>
 
                   {/* SUBJECT + BODY */}

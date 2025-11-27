@@ -8,6 +8,7 @@ import { useAppRouter } from '@/hooks/use-router'
 import { getInboxEmails, Email } from '@/lib/emailApi' 
 import { Skeleton } from '@/components/ui/skeleton'
 import { useMailActions, useMailToolbar } from '@/hooks/use-mail-actions'
+import { useSocket } from '@/hooks/use-socket'
 
 function MailListSkeleton() {
   return (
@@ -28,6 +29,38 @@ function MailListSkeleton() {
   )
 }
 
+const mapAndSanitizeEmails = (emails: (any | null | undefined)[]): Email[] => {
+  if (!Array.isArray(emails)) return [];
+  return emails.filter((e): e is any => !!e).map(item => {
+    const sender = item.from_address || item.email || "";
+
+    const labels: string[] = Array.isArray(item.labels) ? [...item.labels] : [];
+    if (item.is_archived && !labels.includes("archive")) labels.push("archive");
+    if (item.is_trashed && !labels.includes("trash")) labels.push("trash");
+    if (item.folder?.toLowerCase() === 'sent' && !labels.includes('sent')) labels.push('sent');
+    if (item.folder?.toLowerCase() === 'drafts' && !labels.includes('drafts')) labels.push('drafts');
+    if (item.folder?.toLowerCase() === 'junk' && !labels.includes('junk')) labels.push('junk');
+    
+    // If it has no labels and isn't explicitly in another folder, it's in the inbox.
+    if (labels.length === 0 && !item.folder) {
+        labels.push('inbox');
+    }
+
+    return {
+      id: String(item.id),
+      name: sender.split("@")[0] || "Unknown Sender",
+      email: sender,
+      avatar: item.avatar || `https://api.dicebear.com/7.x/initials/svg?seed=${sender}`,
+      subject: item.subject || "(No subject)",
+      body: item.body || "",
+      text: item.html_body || item.body || "",
+      date: item.created_at || item.date || new Date().toISOString(),
+      read: item.is_seen ?? item.read ?? false,
+      labels: labels,
+      attachments: item.attachments || [],
+    };
+  });
+};
 
 export default function FolderPage() {
   const params = useParams()
@@ -41,14 +74,16 @@ export default function FolderPage() {
   
   const { selectedMails, handleSelect } = useMailActions();
   const { setMails: setToolbarMails } = useMailToolbar();
+  const { socket } = useSocket();
 
   React.useEffect(() => {
     async function fetchEmails() {
       setLoading(true);
       try {
-        const inboxEmails = await getInboxEmails()
-        setMails(inboxEmails)
-        setToolbarMails(inboxEmails);
+        const inboxEmails = await getInboxEmails();
+        const sanitized = mapAndSanitizeEmails(inboxEmails);
+        setMails(sanitized)
+        setToolbarMails(sanitized);
       } catch (err) {
         setError('Failed to fetch emails')
       } finally {
@@ -58,15 +93,35 @@ export default function FolderPage() {
     fetchEmails()
   }, [setToolbarMails])
 
+  React.useEffect(() => {
+    if (socket) {
+      socket.on('inbox_updated', (data: { inbox: any[] }) => {
+        if (data.inbox) {
+          const sanitized = mapAndSanitizeEmails(data.inbox);
+          setMails(sanitized);
+          setToolbarMails(sanitized);
+        }
+      });
+
+      return () => {
+        socket.off('inbox_updated');
+      };
+    }
+  }, [socket, setMails, setToolbarMails]);
+
   const filteredMails = React.useMemo(() => {
-    if (folder === 'inbox') {
-      return mails.filter(mail => mail.labels.includes('inbox') && !mail.labels.includes('trash') && !mail.labels.includes('junk'));
-    }
-    if (folder === 'all') {
-      return mails.filter(mail => !['trash', 'junk'].includes(mail.labels[0]))
-    }
-    return mails.filter((mail) => mail.labels.includes(folder as string))
-  }, [folder, mails])
+    return mails.filter(mail => {
+      const labels = mail.labels || [];
+      if (folder === 'inbox') {
+        return labels.includes('inbox') && !labels.includes('trash') && !labels.includes('junk');
+      }
+      if (folder === 'all') {
+        // Assuming 'all' means everything not in trash or junk.
+        return !labels.includes('trash') && !labels.includes('junk');
+      }
+      return labels.includes(folder as string);
+    });
+  }, [folder, mails]);
 
   const handleSelectMail = (id: string) => {
     router.push(`/${folder}/${id}`)
@@ -88,12 +143,13 @@ export default function FolderPage() {
   return (
     <div className="h-full w-full flex">
        <div className="w-full h-full overflow-hidden">
-        {filteredMails.length > 0 ? (
+        {mails.length > 0 ? (
           <MailList 
             items={filteredMails} 
             onSelectMail={handleSelectMail}
             selectedMails={selectedMails}
             onSelect={handleSelect}
+            selectedMailId={mailId as string}
           />
         ) : (
           <div className="p-8 text-center text-muted-foreground">
