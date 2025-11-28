@@ -1,9 +1,12 @@
 import type { placeholderImages } from './placeholder-images.json';
 
 export type Attachment = {
-  name: string;
-  type: 'image' | 'video' | 'audio' | 'file';
-  url: string;
+  id:string;
+  filename:string;
+  content_type:string;
+  name?: string;
+  type?: 'image' | 'video' | 'audio' | 'file';
+  url?: string;
   previewUrl?: string;
-  size: string;
+  size?: string;
 };

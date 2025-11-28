@@ -1,4 +1,4 @@
-import { Email, Attachment } from './types';
+import { Attachment } from "./data";
 
 const mapAttachment = (item: any): Attachment => {
   return {
@@ -10,6 +10,19 @@ const mapAttachment = (item: any): Attachment => {
   };
 }
 
+export type Email = {
+  id: string;
+  name: string;
+  email: string;
+  avatar: string;
+  subject: string;
+  body: string;
+  text: string;
+  date: string;
+  read: boolean;
+  labels: string[];
+  attachments?: Attachment[];
+};
 export interface PaginatedEmailResponse {
   data: Email[];
   pagination: {
