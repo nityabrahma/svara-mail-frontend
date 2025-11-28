@@ -14,13 +14,18 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { Email } from "@/lib/emailApi"
+import { Email, deleteEmails } from "@/lib/emailApi"
 
 interface MailActionsProps {
   mail: Email
 }
 
 const MotionButton = motion(Button);
+
+const handleDelete = async (id: string) => {
+  await deleteEmails([id]);
+}
+
 
 export function MailActions({ mail }: MailActionsProps) {
   return (
@@ -63,9 +68,10 @@ export function MailActions({ mail }: MailActionsProps) {
           <DropdownMenuItem>Mark as unread</DropdownMenuItem>
           <DropdownMenuItem>Snooze</DropdownMenuItem>
           <DropdownMenuItem>Archive</DropdownMenuItem>
-          <DropdownMenuItem>Delete</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleDelete(mail.id)}>Delete</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
   )
 }
+

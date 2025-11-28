@@ -112,3 +112,24 @@ export async function getInboxById(id: string): Promise<Email | null> {
     return null;
   }
 }
+
+export async function deleteEmails(ids: string[]): Promise<void> {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/emails/delete`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({ emailIds: ids }),
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(`Failed to delete emails: ${errorText}`);
+    }
+  } catch (error) {
+    console.error("Error deleting emails:", error);
+    throw error;
+  }
+}

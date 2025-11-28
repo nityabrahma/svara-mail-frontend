@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { Popover, PopoverContent, PopoverAnchor } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
-import { Email } from '@/lib/emailApi';
+import { deleteEmails, Email } from '@/lib/emailApi';
 import { useMailActions } from '@/hooks/use-mail-actions';
 import { Archive, CornerDownLeft, Trash, CheckSquare } from 'lucide-react';
 
@@ -37,9 +37,9 @@ export function MailContextMenu({ mail, onOpenChange, open, position, onSelect }
     onOpenChange(false);
   };
   
-  const handleMoveToTrash = (e: React.MouseEvent) => {
+  const handleMoveToTrash =async (e: React.MouseEvent) => {
     e.stopPropagation();
-    actions.handleMoveTo(mail, 'trash');
+    await deleteEmails([mail.id]);
     onOpenChange(false);
   };
 

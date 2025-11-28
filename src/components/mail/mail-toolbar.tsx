@@ -8,12 +8,17 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Separator } from '@/components/ui/separator'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { useMailActions, useMailToolbar } from '@/hooks/use-mail-actions'
+import { deleteEmails } from '@/lib/emailApi'
 
 export function MailToolbar() {
   const { mails } = useMailToolbar();
   const { selectedMails, handleSelectAll, handleMoveTo, handleMarkAsRead, handleDelete, handleClearSelection } = useMailActions();
   const isVisible = selectedMails.length > 0;
   const allSelected = selectedMails.length === mails.length && mails.length > 0;
+
+  const handleBulkDelete=async(ids:string[])=>{
+    await deleteEmails(ids);
+  }
 
   return (
     <AnimatePresence>
@@ -67,7 +72,7 @@ export function MailToolbar() {
             
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" onClick={() => handleDelete(selectedMails)}>
+                <Button variant="ghost" size="icon" onClick={() => handleBulkDelete(selectedMails.map(mail=>mail.id))}>
                   <Trash2 className="h-5 w-5" />
                   <span className="sr-only">Delete</span>
                 </Button>
