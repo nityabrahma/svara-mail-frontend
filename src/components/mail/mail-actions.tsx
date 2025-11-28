@@ -15,6 +15,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { Email, deleteEmails } from "@/lib/emailApi"
+import { useAppRouter } from "@/hooks/use-router"
+import { useParams } from "next/navigation"
 
 interface MailActionsProps {
   mail: Email
@@ -22,12 +24,18 @@ interface MailActionsProps {
 
 const MotionButton = motion(Button);
 
-const handleDelete = async (id: string) => {
-  await deleteEmails([id]);
-}
-
 
 export function MailActions({ mail }: MailActionsProps) {
+  const router = useAppRouter()
+  const params = useParams()
+  const folder = params.folder || 'inbox'
+
+  const handleDelete = async (id: string) => {
+    await deleteEmails([id]);
+    // Navigate back to the folder list after deletion
+    router.push(`/${folder}`)
+  }
+
   return (
     <div className="flex items-center gap-2">
       <Tooltip>
