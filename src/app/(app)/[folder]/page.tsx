@@ -94,7 +94,13 @@ export default function FolderPage() {
   React.useEffect(() => {
     if (!socket) return;
 
-    const handleInboxUpdated = () => {
+    const handleInboxUpdated = (data: any) => {
+      // If this inbox_updated event was triggered by a new_email (has newEmailId),
+      // skip the reload since new_email handler already added the email
+      if (data?.newEmailId) {
+        console.log('📬 Inbox updated via new email, skipping reload');
+        return;
+      }
       console.log('📬 Inbox updated via socket, reloading...');
       loadEmails(1, true);
     };
