@@ -42,7 +42,7 @@ export default function FolderPage() {
   const [error, setError] = React.useState<string | null>(null)
   
   const { selectedMails, handleSelect } = useMailActions();
-  const { setMails: setToolbarMails } = useMailToolbar();
+  const { mails: toolbarMails, setMails: setToolbarMails } = useMailToolbar();
   const { socket } = useSocket();
 
   const loadEmails = React.useCallback(async (pageNum: number, isInitialLoad = false) => {
@@ -83,6 +83,28 @@ export default function FolderPage() {
       setToolbarMails(mails);
     }
   }, [mails, setToolbarMails]);
+
+  // Sync updates from toolbar back to local state (for mark as read, etc.)
+  React.useEffect(() => {
+    if (toolbarMails && toolbarMails.length > 0) {
+      setMails(prev => {
+        // Only update if there are actual changes (to avoid infinite loops)
+        const hasChanges = prev.some(mail => {
+          const toolbarMail = toolbarMails.find(tm => tm.id === mail.id);
+          return toolbarMail && toolbarMail.read !== mail.read;
+        });
+        
+        if (hasChanges) {
+          return prev.map(mail => {
+            const toolbarMail = toolbarMails.find(tm => tm.id === mail.id);
+            return toolbarMail || mail;
+          });
+        }
+        
+        return prev;
+      });
+    }
+  }, [toolbarMails]);
   
   const loadMoreEmails = React.useCallback(() => {
     if (hasNextPage && !loadingMore) {

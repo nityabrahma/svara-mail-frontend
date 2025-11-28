@@ -112,10 +112,12 @@ export function MailActionsProvider({ children }: { children: React.ReactNode })
             const emailIds = mails.map(m => m.id);
             await markEmailsAsSeen(emailIds);
             
-            // Update local state
-            setAllMails(prev => prev.map(mail => 
+            // Update local state in both allMails and the toolbar mails
+            const updater = (prev: Email[]) => prev.map(mail => 
                 emailIds.includes(mail.id) ? { ...mail, read } : mail
-            ));
+            );
+            
+            setAllMails(updater);
             
             console.log(`Marking ${emailIds.join(', ')} as ${read ? 'read' : 'unread'}`);
             toast({ title: "Updated", description: `${mails.length} email(s) marked as ${read ? 'read' : 'unread'}.` });
