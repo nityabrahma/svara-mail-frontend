@@ -19,6 +19,8 @@ export const MailActionsContext = createContext<MailActionsContextType | undefin
 type MailToolbarContextType = {
     mails: Email[];
     setMails: (mails: Email[]) => void;
+    inboxCount: number;
+    setInboxCount: (count: number | ((prev: number) => number)) => void;
 }
 
 export const MailToolbarContext = createContext<MailToolbarContextType | undefined>(undefined);

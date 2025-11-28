@@ -42,7 +42,7 @@ export default function FolderPage() {
   const [error, setError] = React.useState<string | null>(null)
   
   const { selectedMails, handleSelect } = useMailActions();
-  const { mails: toolbarMails, setMails: setToolbarMails } = useMailToolbar();
+  const { mails: toolbarMails, setMails: setToolbarMails, setInboxCount } = useMailToolbar();
   const { socket } = useSocket();
 
   const loadEmails = React.useCallback(async (pageNum: number, isInitialLoad = false) => {
@@ -64,6 +64,11 @@ export default function FolderPage() {
 
       setHasNextPage(response.pagination.hasNextPage);
       setPage(pageNum);
+      
+      // Update inbox count from pagination
+      if (folder === 'inbox' && setInboxCount) {
+        setInboxCount(response.pagination.totalItems);
+      }
     } catch (err) {
       setError('Failed to fetch emails');
     } finally {
@@ -145,6 +150,11 @@ export default function FolderPage() {
           attachments: data.email.attachments || [],
         };
         setMails(prev => [newMail, ...prev]);
+        
+        // Update inbox count when new email arrives
+        if (folder === 'inbox' && setInboxCount) {
+          setInboxCount((prev: number) => prev + 1);
+        }
       }
     };
 
@@ -153,6 +163,11 @@ export default function FolderPage() {
       if (data.emailIds && Array.isArray(data.emailIds)) {
         const deletedIds = data.emailIds.map((id: any) => String(id));
         setMails(prev => prev.filter(mail => !deletedIds.includes(mail.id)));
+        
+        // Update inbox count when emails are deleted
+        if (folder === 'inbox' && setInboxCount) {
+          setInboxCount((prev: number) => Math.max(0, prev - deletedIds.length));
+        }
       }
     };
 
@@ -174,7 +189,7 @@ export default function FolderPage() {
       socket.off('deleted_emails', handleDeletedEmails);
       socket.off('email_restored', handleEmailRestored);
     };
-  }, [socket, loadEmails, setToolbarMails]);
+  }, [socket, loadEmails, setToolbarMails, folder, setInboxCount]);
 
   const filteredMails = React.useMemo(() => {
     return mails.filter(mail => {

@@ -9,15 +9,23 @@ import { Separator } from '@/components/ui/separator'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { useMailActions, useMailToolbar } from '@/hooks/use-mail-actions'
 import { deleteEmails } from '@/lib/emailApi'
+import { useParams } from 'next/navigation'
 
 export function MailToolbar() {
-  const { mails } = useMailToolbar();
+  const params = useParams();
+  const folder = params.folder || 'inbox';
+  const { mails, setInboxCount } = useMailToolbar();
   const { selectedMails, handleSelectAll, handleMoveTo, handleMarkAsRead, handleDelete, handleClearSelection } = useMailActions();
   const isVisible = selectedMails.length > 0;
   const allSelected = selectedMails.length === mails.length && mails.length > 0;
 
   const handleBulkDelete = async (ids: string[]) => {
     try {
+      // If we're in inbox, decrement count by total emails being deleted
+      if (folder === 'inbox') {
+        setInboxCount((prev: number) => Math.max(0, prev - selectedMails.length));
+      }
+      
       await deleteEmails(ids);
       // The socket event will handle UI update, but we clear selection immediately
       handleClearSelection();

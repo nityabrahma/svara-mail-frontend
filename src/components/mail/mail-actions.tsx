@@ -17,6 +17,7 @@ import {
 import { Email, deleteEmails, markEmailsAsSeen } from "@/lib/emailApi"
 import { useAppRouter } from "@/hooks/use-router"
 import { useParams } from "next/navigation"
+import { useMailToolbar } from "@/hooks/use-mail-actions"
 
 interface MailActionsProps {
   mail: Email
@@ -29,8 +30,14 @@ export function MailActions({ mail }: MailActionsProps) {
   const router = useAppRouter()
   const params = useParams()
   const folder = params.folder || 'inbox'
+  const { setInboxCount } = useMailToolbar()
 
   const handleDelete = async (id: string) => {
+    // If we're in inbox, decrement count (total emails, not just unread)
+    if (folder === 'inbox') {
+      setInboxCount((prev: number) => Math.max(0, prev - 1));
+    }
+    
     await deleteEmails([id]);
     // Navigate back to the folder list after deletion
     router.push(`/${folder}`)

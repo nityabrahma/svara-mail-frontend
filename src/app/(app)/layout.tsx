@@ -12,7 +12,7 @@ import { UserNav } from '@/components/mail/user-nav';
 import { useLoading } from '@/hooks/use-loading';
 import { AnimatePresence, motion } from 'framer-motion';
 import { MailToolbar } from '@/components/mail/mail-toolbar';
-import { MailActionsContext, MailToolbarContext } from '@/hooks/use-mail-actions';
+import { MailActionsContext, MailToolbarContext, useMailToolbar } from '@/hooks/use-mail-actions';
 import { useToast } from '@/hooks/use-toast';
 import { Email, markEmailsAsSeen } from '@/lib/emailApi';
 
@@ -65,6 +65,15 @@ export function MailActionsProvider({ children }: { children: React.ReactNode })
     const { toast } = useToast();
     const [selectedMails, setSelectedMails] = React.useState<Email[]>([]);
     const [allMails, setAllMails] = React.useState<Email[]>([]);
+    const [inboxCount, setInboxCount] = React.useState<number>(0);
+
+    const handleSetInboxCount = React.useCallback((value: number | ((prev: number) => number)) => {
+        if (typeof value === 'function') {
+            setInboxCount(prev => value(prev));
+        } else {
+            setInboxCount(value);
+        }
+    }, []);
 
     const handleSelect = (mail: Email) => {
         setSelectedMails(prevSelected => {
@@ -146,7 +155,9 @@ export function MailActionsProvider({ children }: { children: React.ReactNode })
     const mailToolbarValue = React.useMemo(() => ({
         mails: allMails,
         setMails: setAllMails,
-    }), [allMails]);
+        inboxCount,
+        setInboxCount: handleSetInboxCount,
+    }), [allMails, inboxCount, handleSetInboxCount]);
 
     return (
         <MailActionsContext.Provider value={mailActionsValue}>
@@ -163,33 +174,42 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <MailActionsProvider>
-      <SidebarProvider defaultOpen>
-        <div className="flex h-screen w-full flex-col">
-            <GlobalLoader />
-            <AppHeader />
-            <div className="flex flex-1 overflow-hidden">
-                <Sidebar>
-                    <SidebarContent>
-                        <MailNav onComposeClick={() => setComposeOpen(true)} />
-                    </SidebarContent>
-                </Sidebar>
-                <main className="flex-1 overflow-auto flex flex-col">
-                    <MailToolbar />
-                    {children}
-                </main>
+      <InboxCountConsumer>
+        {(inboxCount) => (
+          <SidebarProvider defaultOpen>
+            <div className="flex h-screen w-full flex-col">
+                <GlobalLoader />
+                <AppHeader />
+                <div className="flex flex-1 overflow-hidden">
+                    <Sidebar>
+                        <SidebarContent>
+                            <MailNav onComposeClick={() => setComposeOpen(true)} inboxCount={inboxCount} />
+                        </SidebarContent>
+                    </Sidebar>
+                    <main className="flex-1 overflow-auto flex flex-col">
+                        <MailToolbar />
+                        {children}
+                    </main>
+                </div>
             </div>
-        </div>
-        <ComposeDialog open={isComposeOpen} onOpenChange={setComposeOpen} />
-        <MotionButton
-            onClick={() => setComposeOpen(true)}
-            whileHover={{ scale: 1.1, rotate: 5 }}
-            whileTap={{ scale: 0.9 }}
-            className="fixed bottom-6 right-6 h-16 w-16 rounded-full shadow-lg z-10"
-        >
-            <Edit className="h-6 w-6" />
-            <span className="sr-only">Compose</span>
-        </MotionButton>
-      </SidebarProvider>
+            <ComposeDialog open={isComposeOpen} onOpenChange={setComposeOpen} />
+            <MotionButton
+                onClick={() => setComposeOpen(true)}
+                whileHover={{ scale: 1.1, rotate: 5 }}
+                whileTap={{ scale: 0.9 }}
+                className="fixed bottom-6 right-6 h-16 w-16 rounded-full shadow-lg z-10"
+            >
+                <Edit className="h-6 w-6" />
+                <span className="sr-only">Compose</span>
+            </MotionButton>
+          </SidebarProvider>
+        )}
+      </InboxCountConsumer>
     </MailActionsProvider>
   );
+}
+
+function InboxCountConsumer({ children }: { children: (count: number) => React.ReactNode }) {
+  const { inboxCount } = useMailToolbar();
+  return <>{children(inboxCount)}</>;
 }

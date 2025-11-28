@@ -27,12 +27,20 @@ const navLinks = [
 
 const MotionButton = motion.button;
 
-export function MailNav({ onComposeClick }: { onComposeClick: () => void }) {
+export function MailNav({ onComposeClick, inboxCount }: { onComposeClick: () => void; inboxCount?: number }) {
     const { state, isMobile } = useSidebar();
     const isCollapsed = !isMobile && state === 'collapsed';
     const params = useParams();
     const router = useAppRouter();
     const currentFolder = params.folder || 'inbox';
+
+    // Update the inbox label with the count
+    const getLabel = (link: typeof navLinks[0]) => {
+        if (link.folder === 'inbox' && inboxCount !== undefined) {
+            return String(inboxCount);
+        }
+        return link.label;
+    };
 
     const handleNavClick = (folder: string) => {
         router.push(`/${folder}`);
@@ -62,9 +70,9 @@ export function MailNav({ onComposeClick }: { onComposeClick: () => void }) {
                 </TooltipTrigger>
                 <TooltipContent side="right" className="flex items-center gap-4">
                     {link.title}
-                    {link.label && (
+                    {getLabel(link) && (
                     <span className="ml-auto text-muted-foreground">
-                        {link.label}
+                        {getLabel(link)}
                     </span>
                     )}
                 </TooltipContent>
@@ -82,8 +90,8 @@ export function MailNav({ onComposeClick }: { onComposeClick: () => void }) {
                 >
                     <link.icon className="mr-4 h-6 w-6" />
                     {link.title}
-                    {link.label && (
-                        <span className={cn('ml-auto', currentFolder === link.folder && 'text-secondary-foreground')}>{link.label}</span>
+                    {getLabel(link) && (
+                        <span className={cn('ml-auto', currentFolder === link.folder && 'text-secondary-foreground')}>{getLabel(link)}</span>
                     )}
                 </MotionButton>
             )
