@@ -82,7 +82,7 @@ export function MailList({
               onContextMenu={(e) => handleContextMenu(e, item)}
               whileTap={{ scale: 0.98 }}
               className={cn(
-                "relative flex flex-col items-start gap-2 px-4 py-3 text-left text-sm transition-all hover:bg-secondary/80 hover:text-secondary-foreground border-b",
+                "relative flex flex-col items-start gap-2 px-3 py-3 text-left text-sm transition-all hover:bg-secondary/80 hover:text-secondary-foreground border-b",
                 selectedMailId === item.id && "bg-secondary text-secondary-foreground",
                 isUnread && !isSelected(item.id) && "bg-secondary/70"
               )}
@@ -97,7 +97,7 @@ export function MailList({
                       className="h-5 w-5"
                     />
                   ) : (
-                    isUnread && <span className="absolute left-2 top-1/2 -translate-y-1/2 flex h-2 w-2 rounded-full bg-primary" />
+                    isUnread && <span className="absolute left-3 top-1/2 -translate-y-1/2 flex h-2 w-2 rounded-full bg-primary" />
                   )}
 
                   <div
@@ -105,7 +105,7 @@ export function MailList({
                       !isUnread && "text-muted-foreground",
                       isUnread && "font-semibold",
                       "text-base w-1/5",
-                      {"pl-4": !isSelectionMode && isUnread}
+                      {"pl-4": !isSelectionMode}
                     )}
                   >
                     {(isUnread ? item.name.charAt(0).toUpperCase() : item.name.charAt(0).toLowerCase()) + item.name.slice(1)}
