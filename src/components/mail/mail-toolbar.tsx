@@ -16,8 +16,15 @@ export function MailToolbar() {
   const isVisible = selectedMails.length > 0;
   const allSelected = selectedMails.length === mails.length && mails.length > 0;
 
-  const handleBulkDelete=async(ids:string[])=>{
-    await deleteEmails(ids);
+  const handleBulkDelete = async (ids: string[]) => {
+    try {
+      await deleteEmails(ids);
+      // The socket event will handle UI update, but we clear selection immediately
+      handleClearSelection();
+    } catch (error) {
+      console.error('Failed to delete emails:', error);
+      // Optionally show an error toast
+    }
   }
 
   return (

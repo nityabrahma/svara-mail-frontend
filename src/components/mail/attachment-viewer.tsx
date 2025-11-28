@@ -24,18 +24,18 @@ export function AttachmentViewer({ attachment, onOpenChange }: AttachmentViewerP
       case 'image':
         return (
             <div className="relative w-full h-[70vh]">
-                <Image src={attachment.url} alt={attachment.name} layout="fill" objectFit="contain" />
+                <Image src={attachment.url || ''} alt={attachment.name || attachment.filename} layout="fill" objectFit="contain" />
             </div>
         )
       case 'video':
-        return <video src={attachment.url} controls className="w-full max-h-[70vh] rounded-md" />;
+        return <video src={attachment.url || ''} controls className="w-full max-h-[70vh] rounded-md" />;
       case 'audio':
-        return <audio src={attachment.url} controls className="w-full" />;
+        return <audio src={attachment.url || ''} controls className="w-full" />;
       default:
         return (
           <div className="flex flex-col items-center justify-center h-64 bg-secondary rounded-md">
             <FileIcon className="h-24 w-24 text-muted-foreground" />
-            <p className="mt-4 text-lg font-semibold">{attachment.name}</p>
+            <p className="mt-4 text-lg font-semibold">{attachment.name || attachment.filename}</p>
             <p className="text-muted-foreground">{attachment.size}</p>
           </div>
         );

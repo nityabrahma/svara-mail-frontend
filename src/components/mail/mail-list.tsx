@@ -39,7 +39,7 @@ export function MailList({
 
   const observerRef = React.useRef<IntersectionObserver | null>(null);
 
-  const lastItemRef = React.useCallback(node => {
+  const lastItemRef = React.useCallback((node: HTMLButtonElement | null) => {
     if (loadingMore) return;
     if (observerRef.current) observerRef.current.disconnect();
 

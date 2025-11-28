@@ -114,7 +114,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
                   {mail.attachments.map((att, index) => (
                     <Card key={index} className="group relative overflow-hidden rounded-lg cursor-pointer" onClick={() => setSelectedAttachment(att)}>
                       {att.type === 'image' && att.previewUrl ? (
-                        <Image src={att.previewUrl} alt={att.name} width={200} height={150} className="h-full w-full object-cover transition-transform group-hover:scale-105" data-ai-hint="attachment preview"/>
+                        <Image src={att.previewUrl || att.url || ''} alt={att.name || att.filename} width={200} height={150} className="h-full w-full object-cover transition-transform group-hover:scale-105" data-ai-hint="attachment preview"/>
                       ) : (
                          <div className="flex h-32 w-full items-center justify-center bg-secondary">
                           {getAttachmentIcon(att.type)}

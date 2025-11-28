@@ -1,5 +1,8 @@
 import { Attachment } from "./data";
 
+// Re-export Attachment for use in other components
+export type { Attachment };
+
 const mapAttachment = (item: any): Attachment => {
   return {
     id: String(item.id),
@@ -121,15 +124,41 @@ export async function deleteEmails(ids: string[]): Promise<void> {
         "Content-Type": "application/json",
       },
       credentials: "include",
-      body: JSON.stringify({ emailIds: ids }),
+      body: JSON.stringify({ emailIds: ids.map(id => Number(id)) }),
     });
 
     if (!res.ok) {
       const errorText = await res.text();
       throw new Error(`Failed to delete emails: ${errorText}`);
     }
+
+    const result = await res.json();
+    console.log('Delete result:', result);
   } catch (error) {
     console.error("Error deleting emails:", error);
+    throw error;
+  }
+}
+
+export async function restoreEmail(id: string): Promise<void> {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/emails/restore/${id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(`Failed to restore email: ${errorText}`);
+    }
+
+    const result = await res.json();
+    console.log('Restore result:', result);
+  } catch (error) {
+    console.error("Error restoring email:", error);
     throw error;
   }
 }

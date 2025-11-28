@@ -61,7 +61,9 @@ export default function FolderPage() {
       const newMails = response.data;
 
       setMails(prev => isInitialLoad ? newMails : [...prev, ...newMails]);
-      setToolbarMails(prev => isInitialLoad ? newMails : [...prev, ...newMails]);
+      if (setToolbarMails) {
+        setToolbarMails(isInitialLoad ? newMails : mails.concat(newMails));
+      }
 
       setHasNextPage(response.pagination.hasNextPage);
       setPage(pageNum);
@@ -71,7 +73,7 @@ export default function FolderPage() {
       setLoading(false);
       setLoadingMore(false);
     }
-  }, [hasNextPage, setToolbarMails]);
+  }, [hasNextPage, mails, setToolbarMails]);
 
   React.useEffect(() => {
     loadEmails(1, true);
@@ -84,18 +86,75 @@ export default function FolderPage() {
     }
   }, [hasNextPage, loadingMore, page, loadEmails]);
 
+  // Socket event listeners for real-time updates
   React.useEffect(() => {
-    if (socket) {
-      socket.on('inbox_updated', () => {
-        console.log('Inbox updated via socket, reloading...');
-        loadEmails(1, true);
-      });
+    if (!socket) return;
 
-      return () => {
-        socket.off('inbox_updated');
-      };
-    }
-  }, [socket, loadEmails]);
+    const handleInboxUpdated = () => {
+      console.log('📬 Inbox updated via socket, reloading...');
+      loadEmails(1, true);
+    };
+
+    const handleNewEmail = (data: any) => {
+      console.log('📨 New email received:', data);
+      // Add the new email to the beginning of the list
+      if (data.email) {
+        const newMail: Email = {
+          id: String(data.email.id),
+          name: (data.email.from_address || '').split('@')[0] || 'Unknown',
+          email: data.email.from_address || '',
+          avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${data.email.from_address}`,
+          subject: data.email.subject || '(No subject)',
+          body: data.email.body || '',
+          text: data.email.html_body || data.email.body || '',
+          date: data.email.created_at || new Date().toISOString(),
+          read: false,
+          labels: ['inbox'],
+          attachments: data.email.attachments || [],
+        };
+        setMails(prev => {
+          const updated = [newMail, ...prev];
+          if (setToolbarMails) {
+            setToolbarMails(updated);
+          }
+          return updated;
+        });
+      }
+    };
+
+    const handleDeletedEmails = (data: any) => {
+      console.log('🗑️ Emails deleted via socket:', data);
+      if (data.emailIds && Array.isArray(data.emailIds)) {
+        const deletedIds = data.emailIds.map((id: any) => String(id));
+        setMails(prev => {
+          const updated = prev.filter(mail => !deletedIds.includes(mail.id));
+          if (setToolbarMails) {
+            setToolbarMails(updated);
+          }
+          return updated;
+        });
+      }
+    };
+
+    const handleEmailRestored = (data: any) => {
+      console.log('📧 Email restored via socket:', data);
+      // Reload emails to show the restored email
+      loadEmails(1, true);
+    };
+
+    // Register all socket event listeners
+    socket.on('inbox_updated', handleInboxUpdated);
+    socket.on('new_email', handleNewEmail);
+    socket.on('deleted_emails', handleDeletedEmails);
+    socket.on('email_restored', handleEmailRestored);
+
+    return () => {
+      socket.off('inbox_updated', handleInboxUpdated);
+      socket.off('new_email', handleNewEmail);
+      socket.off('deleted_emails', handleDeletedEmails);
+      socket.off('email_restored', handleEmailRestored);
+    };
+  }, [socket, loadEmails, setToolbarMails]);
 
   const filteredMails = React.useMemo(() => {
     return mails.filter(mail => {

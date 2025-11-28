@@ -58,6 +58,16 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
       setIsConnected(false);
     });
 
+    newSocket.on("reconnect", (attemptNumber: number) => {
+      console.log(`✅ Socket reconnected after ${attemptNumber} attempts`);
+      setIsConnected(true);
+      // Rejoin room after reconnection
+      if (user?.id) {
+        console.log(`📍 Rejoining room for user ${user.id}`);
+        newSocket.emit("join", { userId: user.id });
+      }
+    });
+
     newSocket.on("connect_error", (error: Error) => {
       console.error(`❌ Socket connection error: ${error.message}`);
       setIsConnected(false);
