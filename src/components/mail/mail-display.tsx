@@ -9,7 +9,7 @@ import {
   AvatarImage,
 } from '@/components/ui/avatar'
 import { Separator } from '@/components/ui/separator'
-import { Email, Attachment } from '@/lib/emailApi'
+import { Email, Attachment, markEmailsAsSeen } from '@/lib/emailApi'
 import { MailActions } from './mail-actions'
 import { MotionButton } from '../ui/button'
 import { ArrowLeft, Download, Paperclip, File as FileIcon, Music, Video } from 'lucide-react'
@@ -25,6 +25,15 @@ interface MailDisplayProps {
 export function MailDisplay({ mail }: MailDisplayProps) {
   const router = useAppRouter()
   const [selectedAttachment, setSelectedAttachment] = React.useState<Attachment | null>(null)
+
+  // Mark email as read when opened (if it's not already read)
+  React.useEffect(() => {
+    if (mail && !mail.read) {
+      markEmailsAsSeen([mail.id]).catch(error => {
+        console.error('Failed to mark email as read:', error);
+      });
+    }
+  }, [mail?.id, mail?.read]);
 
   if (!mail) {
     return (

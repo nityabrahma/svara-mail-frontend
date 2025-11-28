@@ -14,7 +14,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { Email, deleteEmails } from "@/lib/emailApi"
+import { Email, deleteEmails, markEmailsAsSeen } from "@/lib/emailApi"
 import { useAppRouter } from "@/hooks/use-router"
 import { useParams } from "next/navigation"
 
@@ -34,6 +34,15 @@ export function MailActions({ mail }: MailActionsProps) {
     await deleteEmails([id]);
     // Navigate back to the folder list after deletion
     router.push(`/${folder}`)
+  }
+
+  const handleMarkAsUnread = async (id: string) => {
+    try {
+      await markEmailsAsSeen([id]);
+      router.push(`/${folder}`);
+    } catch (error) {
+      console.error('Failed to mark email as unread:', error);
+    }
   }
 
   return (
@@ -73,7 +82,7 @@ export function MailActions({ mail }: MailActionsProps) {
           </MotionButton>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem>Mark as unread</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleMarkAsUnread(mail.id)}>Mark as unread</DropdownMenuItem>
           <DropdownMenuItem>Snooze</DropdownMenuItem>
           <DropdownMenuItem>Archive</DropdownMenuItem>
           <DropdownMenuItem onClick={() => handleDelete(mail.id)}>Delete</DropdownMenuItem>
