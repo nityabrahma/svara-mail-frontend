@@ -18,6 +18,32 @@ type MailContextMenuProps = {
 
 export function MailContextMenu({ mail, onOpenChange, open, position, onSelect }: MailContextMenuProps) {
   const actions = useMailActions();
+  const [adjustedPosition, setAdjustedPosition] = React.useState(position);
+
+  React.useEffect(() => {
+    if (open) {
+      // Adjust position to prevent menu from going off-screen
+      const menuWidth = 224; // w-56 = 14rem = 224px
+      const menuHeight = 200; // approximate height
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+
+      let adjustedLeft = position.left;
+      let adjustedTop = position.top;
+
+      // Adjust horizontal position if too close to right edge
+      if (position.left + menuWidth > viewportWidth) {
+        adjustedLeft = viewportWidth - menuWidth - 10;
+      }
+
+      // Adjust vertical position if too close to bottom edge
+      if (position.top + menuHeight > viewportHeight) {
+        adjustedTop = viewportHeight - menuHeight - 10;
+      }
+
+      setAdjustedPosition({ top: adjustedTop, left: adjustedLeft });
+    }
+  }, [open, position]);
 
   const handleSelect = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -44,9 +70,23 @@ export function MailContextMenu({ mail, onOpenChange, open, position, onSelect }
   };
 
   return (
-    <Popover open={open} onOpenChange={onOpenChange}>
-      <PopoverAnchor style={{ position: 'absolute', top: position.top, left: position.left }} />
-      <PopoverContent sideOffset={0} className="w-56 p-2" onCloseAutoFocus={(e) => e.preventDefault()}>
+    <Popover open={open} onOpenChange={onOpenChange} modal={false}>
+      <PopoverAnchor 
+        style={{ 
+          position: 'fixed', 
+          top: `${adjustedPosition.top}px`, 
+          left: `${adjustedPosition.left}px`,
+          width: 0,
+          height: 0,
+        }} 
+      />
+      <PopoverContent 
+        sideOffset={5} 
+        align="start"
+        className="w-56 p-2" 
+        onCloseAutoFocus={(e) => e.preventDefault()}
+        onOpenAutoFocus={(e) => e.preventDefault()}
+      >
         <div className="flex flex-col gap-1">
             <Button variant="ghost" className="w-full justify-start gap-2" onClick={handleSelect}>
                 <CheckSquare className="h-4 w-4" />
