@@ -21,7 +21,6 @@ const navLinks = [
   { title: 'Inbox', label: '', icon: Inbox, variant: 'ghost', folder: 'inbox' },
   { title: 'Drafts', label: '9', icon: File, variant: 'ghost', folder: 'drafts' },
   { title: 'Sent', label: '', icon: Send, variant: 'ghost', folder: 'sent' },
-  { title: 'Junk', label: '23', icon: Archive, variant: 'ghost', folder: 'junk' },
   { title: 'Trash', label: '', icon: Trash2, variant: 'ghost', folder: 'trash' },
 ];
 
