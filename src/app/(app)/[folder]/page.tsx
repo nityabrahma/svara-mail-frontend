@@ -61,9 +61,6 @@ export default function FolderPage() {
       const newMails = response.data;
 
       setMails(prev => isInitialLoad ? newMails : [...prev, ...newMails]);
-      if (setToolbarMails) {
-        setToolbarMails(isInitialLoad ? newMails : mails.concat(newMails));
-      }
 
       setHasNextPage(response.pagination.hasNextPage);
       setPage(pageNum);
@@ -73,12 +70,19 @@ export default function FolderPage() {
       setLoading(false);
       setLoadingMore(false);
     }
-  }, [hasNextPage, mails, setToolbarMails]);
+  }, [hasNextPage]);
 
   React.useEffect(() => {
     loadEmails(1, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Sync mails to toolbar
+  React.useEffect(() => {
+    if (setToolbarMails) {
+      setToolbarMails(mails);
+    }
+  }, [mails, setToolbarMails]);
   
   const loadMoreEmails = React.useCallback(() => {
     if (hasNextPage && !loadingMore) {
@@ -112,13 +116,7 @@ export default function FolderPage() {
           labels: ['inbox'],
           attachments: data.email.attachments || [],
         };
-        setMails(prev => {
-          const updated = [newMail, ...prev];
-          if (setToolbarMails) {
-            setToolbarMails(updated);
-          }
-          return updated;
-        });
+        setMails(prev => [newMail, ...prev]);
       }
     };
 
@@ -126,13 +124,7 @@ export default function FolderPage() {
       console.log('🗑️ Emails deleted via socket:', data);
       if (data.emailIds && Array.isArray(data.emailIds)) {
         const deletedIds = data.emailIds.map((id: any) => String(id));
-        setMails(prev => {
-          const updated = prev.filter(mail => !deletedIds.includes(mail.id));
-          if (setToolbarMails) {
-            setToolbarMails(updated);
-          }
-          return updated;
-        });
+        setMails(prev => prev.filter(mail => !deletedIds.includes(mail.id)));
       }
     };
 
